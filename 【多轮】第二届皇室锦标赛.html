@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>川三甲 · 辛巴巴皇室锦标赛</title>
+    <!-- 皇室战争风格：哥特暗色、金色浮雕、羊皮纸纹理 -->
+    <!-- Google Fonts & Font Awesome (免费图标库) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ---------- 皇室战争风格重置 & 基架 ---------- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Roboto', 'Arial', sans-serif;
+            background-color: #1a120b;  /* 深褐底色 */
+            background-image: 
+                linear-gradient(rgba(200, 160, 100, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(200, 160, 100, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: #ecd9b4;  /* 羊皮纸浅褐 */
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* 装饰盾纹 (伪元素背景) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M20 20 L80 20 L80 80 L20 80 Z" fill="none" stroke="%23b8860b" stroke-width="1.5"/><circle cx="50" cy="50" r="15" fill="none" stroke="%23b8860b" stroke-width="1"/></svg>');
+            background-repeat: repeat;
+            background-size: 80px 80px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 0 #2a1e0f, 4px 4px 4px rgba(0,0,0,0.6);
+            color: #f5d742;  /* 皇家金 */
+            border-bottom: 2px solid #b68b40;
+            padding-bottom: 8px;
+            margin: 25px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            border-bottom: 4px double #b68b40;
+            padding-bottom: 15px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            justify-content: center;
+        }
+        h1 i { font-size: 2.2rem; color: #ffd966; }
+
+        h2 i, h3 i, h4 i { color: #d4af37; font-size: 1.6rem; }
+
+        .section {
+            position: relative;
+            z-index: 2;
+            background: rgba(26, 18, 12, 0.85);
+            backdrop-filter: blur(3px);
+            border: 2px solid #997b4a;
+            border-radius: 24px 8px 24px 8px;  /* 粗犷石砌感 */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 10px 20px rgba(0,0,0,0.5);
+            padding: 25px 20px;
+            margin-bottom: 35px;
+        }
+
+        /* 输入区域 / 卡片风格 */
+        input, select, button {
+            background: #2f2319;
+            border: 2px solid #aa8b5c;
+            border-radius: 30px;         /* 圆润但硬朗 */
+            padding: 10px 18px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #f3e3c2;
+            box-shadow: inset 2px 2px 5px #0f0b07, 0 4px 0 #5f4a2e;
+            transition: all 0.15s ease;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23d4af37" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+
+        input:focus, select:focus {
+            border-color: #f5cb5c;
+            box-shadow: 0 0 12px #f5cb5c, inset 2px 2px 8px #0f0b07;
+        }
+
+        button {
+            background: linear-gradient(145deg, #785e30, #4f3d1f);
+            border: 2px solid #e6bc73;
+            color: #ffeec2;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #3f2f14, 0 8px 10px black;
+            margin: 8px 5px;
+            min-width: 140px;
+        }
+
+        button:hover {
+            background: linear-gradient(145deg, #8f723f, #635029);
+            border-color: #ffde9e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #3f2f14, 0 12px 16px black;
+        }
+
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #3f2f14;
+        }
+
+        /* 特殊重置按钮 (暗红/黑铁) */
+        .btn-reset {
+            background: linear-gradient(145deg, #582c1c, #2f1a10);
+            border-color: #b56f4a;
+            box-shadow: 0 6px 0 #3d1e10;
+        }
+        .btn-reset:hover {
+            background: linear-gradient(145deg, #743f2b, #472616);
+            border-color: #d48f62;
+        }
+
+        .player-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .player-inputs input {
+            flex: 1 1 180px;
+            background: #1e1610;
+            border-color: #b4945a;
+            color: #ffdba5;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        /* 分组卡片组 */
+        .group {
+            background: #2d2218e0;
+            border: 2px solid #c9a45b;
+            border-radius: 30px 10px 30px 10px;
+            padding: 20px;
+            box-shadow: inset 0 0 30px #0f0904, 0 8px 0 #5b421f;
+            backdrop-filter: blur(4px);
+        }
+        .group h4 {
+            border-bottom: 1px solid #ab8b4c;
+            margin-top: 0;
+            font-size: 1.8rem;
+            justify-content: center;
+        }
+        .group select {
+            width: 100%;
+            margin: 8px 0;
+            background-color: #1f1812;
+        }
+
+        /* 比赛卡片 (小组赛) */
+        .match {
+            background: #32281db0;
+            border: 2px solid #b6934b;
+            border-radius: 50px 12px 50px 12px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 6px 0 #5e451f, 0 4px 12px black;
+        }
+        .match span {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #fad982;
+            text-shadow: 2px 2px 0 #2f1f0c;
+            min-width: 120px;
+        }
+        .match select, .match input {
+            flex: 1 1 160px;
+            min-width: 140px;
+        }
+        .match input[type="number"] {
+            max-width: 120px;
+        }
+        
+        /* 轮次标题样式 */
+        .round-header {
+            color: #d4af37;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            border-bottom: 1px dashed #6b4f28;
+            padding-bottom: 5px;
+        }
+
+        /* 排名表 战损风格 */
+        .ranking-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 6px;
+            margin-top: 20px;
+        }
+        .ranking-table th {
+            background: #4f3e24;
+            color: #faeac6;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            padding: 14px 8px;
+            border: 1px solid #cba86b;
+            border-radius: 20px 4px 20px 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .ranking-table td {
+            background: #281f14cc;
+            padding: 12px 8px;
+            border: 1px solid #8f7341;
+            border-radius: 16px 4px 16px 4px;
+            color: #f2dba5;
+            font-weight: 500;
+            backdrop-filter: blur(2px);
+        }
+        .ranking-table tr td:first-child {
+            font-weight: bold;
+            color: #ffd966;
+        }
+        /* 前两名(出线) 金色辉光 */
+        .ranking-table tr[style*="background: #e8f5e9"] td,
+        .ranking-table tr td[style*="background"] {
+            background: #5f4d2c !important;
+            border-color: #fad268 !important;
+            box-shadow: 0 0 15px #ffbf00;
+            color: #fff1c1;
+            font-weight: 700;
+        }
+
+        /* 淘汰赛支架 */
+        .knockout-bracket {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        .bracket-round {
+            background: rgba(20, 15, 10, 0.7);
+            border: 2px solid #a98147;
+            border-radius: 40px 10px 40px 10px;
+            padding: 20px;
+            min-width: 280px;
+            box-shadow: 0 10px 0 #60471f;
+        }
+        .bracket-round h4 {
+            text-align: center;
+            margin-top: 0;
+            border-bottom: 2px solid #b4944b;
+        }
+        .bracket-match {
+            background: #2e231bb0;
+            border: 3px solid #ba954b;
+            border-radius: 40px 8px 40px 8px;
+            padding: 20px 16px;
+            margin: 20px 0;
+            box-shadow: 0 7px 0 #5f421f;
+        }
+        .bracket-match.winner {
+            border-color: #ffd966;
+            background: #3f311ed0;
+            box-shadow: 0 0 25px gold, 0 7px 0 #9b721f;
+        }
+        .bracket-match select, .bracket-match input {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        /* 加载动画 (皇室宝箱旋转) */
+        .loading {
+            text-align: center;
+            padding: 80px;
+            font-size: 2rem;
+            color: #e3b87c;
+            font-family: 'Cinzel', serif;
+        }
+        .loading i {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 20px;
+            animation: crown-spin 2s infinite linear;
+            filter: drop-shadow(0 0 10px gold);
+        }
+        @keyframes crown-spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* 其他细节 */
+        hr {
+            border: 1px solid #6b4f28;
+            margin: 20px 0;
+        }
+        i.fa-crown, i.fa-shield, i.fa-swords {
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+        /* 淘汰赛晋级文字 (覆盖内联绿) */
+        .bracket-match div[style*="color: #4CAF50"] {
+            color: #ffd966 !important;
+            font-weight: bold;
+            background: #3f300d;
+            padding: 8px;
+            border-radius: 30px;
+            border: 1px solid gold;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 700px) {
+            h1 { font-size: 1.8rem; }
+            .match span { min-width: 100%; }
+            .knockout-bracket { flex-direction: column; align-items: center; }
+        }
+
+        /* 给原本内联绿色的重置按钮去掉内联, 使用class (已手动修改HTML) */
+        /* 原有style中的绿色背景会被覆盖，但为了安全，全部button已统一样式 */
+    </style>
+</head>
+<body>
+    <h1>
+        <i class="fas fa-crown"></i> 
+        川三甲第二届辛巴巴博弈杯 
+        <i class="fas fa-shield-alt"></i>
+    </h1>
+    <div id="loading" class="loading">
+        <i class="fas fa-chess-rook"></i> 正在加载竞技场数据...
+    </div>
+
+    <div id="app" style="display: none;">
+        <!-- 1. 输入选手 -->
+        <div class="section" id="player-section">
+            <h2><i class="fas fa-users"></i> 1. 征召6位挑战者</h2>
+            <div class="player-inputs" id="player-inputs"></div>
+            <button onclick="savePlayers()"><i class="fas fa-save"></i> 保存勇士</button>
+            <!-- 移除了内联style，使用btn-reset类 -->
+            <button class="btn-reset" onclick="resetData()"><i class="fas fa-skull-crossbones"></i> 重置所有数据</button>
+        </div>
+
+        <!-- 2. 分组 -->
+        <div class="section" id="group-section" style="display: none;">
+            <h2><i class="fas fa-flag"></i> 2. 分编小组 (A组·B组)</h2>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="group" style="flex: 1; min-width: 300px;">
+                    <h4><i class="fas fa-dragon"></i> A组</h4>
+                    <div id="group-a-select"></div>
+                </div>
+                <div class="group" style="flex: 1; min-width: 300px;">
+                    <h4><i class="fas fa-tshirt"></i> B组</h4>
+                    <div id="group-b-select"></div>
+                </div>
+            </div>
+            
+            <!-- 新增：轮数选择器 -->
+            <div style="text-align: center; margin-top: 25px;">
+                <label for="rounds-select" style="font-weight: bold; color: #f5d742; font-size: 1.1rem; margin-right: 10px;">
+                    <i class="fas fa-sync-alt"></i> 循环赛轮数：
+                </label>
+                <select id="rounds-select" style="padding: 10px 25px; border-radius: 30px; background: #2f2319; color: #f3e3c2; border: 2px solid #aa8b5c; font-size: 1rem; cursor: pointer;">
+                    <option value="1">1 轮（单循环）</option>
+                    <option value="2">2 轮（双循环·主客场）</option>
+                    <option value="3">3 轮</option>
+                    <option value="4">4 轮</option>
+                </select>
+            </div>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <button onclick="saveGroups()"><i class="fas fa-crosshairs"></i> 锁定分组 & 生成小组赛</button>
+            </div>
+        </div>
+
+        <!-- 3. 小组赛 -->
+        <div class="section" id="group-stage-section" style="display: none;">
+            <h2><i class="fas fa-fist-raised"></i> 3. 小组内循环 · 皇冠争夺</h2>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="group" style="flex: 1; min-width: 300px;">
+                    <h3><i class="fas fa-dragon"></i> A组战报</h3>
+                    <div id="group-a-matches"></div>
+                    <h4><i class="fas fa-trophy"></i> A组排名</h4>
+                    <table class="ranking-table" id="group-a-ranking"></table>
+                </div>
+                <div class="group" style="flex: 1; min-width: 300px;">
+                    <h3><i class="fas fa-tshirt"></i> B组战报</h3>
+                    <div id="group-b-matches"></div>
+                    <h4><i class="fas fa-trophy"></i> B组排名</h4>
+                    <table class="ranking-table" id="group-b-ranking"></table>
+                </div>
+            </div>
+            <button onclick="generateKnockout()"><i class="fas fa-swords"></i> 晋级 · 生成淘汰赛</button>
+        </div>
+
+        <!-- 4. 淘汰赛 -->
+        <div class="section" id="knockout-section" style="display: none;">
+            <h2><i class="fas fa-crown"></i> 4. 王者之战 · 淘汰赛</h2>
+            <div class="knockout-bracket" id="knockout-bracket"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量缓存数据
+        let globalData = null;
+        // 本地存储的key名，固定不变
+        const STORAGE_KEY = 'cr_tournament_local_data';
+
+        // 页面加载完成后自动运行
+        window.onload = async function() {
+            renderPlayerInputs();
+            loadData(); // 从本地存储加载数据
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            refreshUI(); // 根据加载的数据刷新界面
+        };
+
+        // 刷新所有UI状态的总函数
+        function refreshUI() {
+            if (!globalData) return;
+            if (globalData.players) {
+                // 回填选手名字到输入框
+                for(let i=0; i<6; i++) {
+                    const input = document.getElementById(`player-${i+1}`);
+                    if(input && globalData.players[i]) input.value = globalData.players[i];
+                }
+                renderGroupSelects();
+            }
+            if (globalData.matches) renderGroupStage();
+            if (globalData.knockout) renderKnockout();
+        }
+
+        // --- 本地存储核心逻辑（替换原Supabase逻辑）---
+
+        // 1. 从本地存储加载数据
+        function loadData() {
+            try {
+                // 读取本地存储的数据
+                const localData = localStorage.getItem(STORAGE_KEY);
+                if (localData) {
+                    globalData = JSON.parse(localData);
+                } else {
+                    // 第一次运行，初始化空数据
+                    globalData = {};
+                }
+                console.log('本地数据加载成功');
+            } catch (e) {
+                console.error('加载本地数据失败', e);
+                alert('加载数据失败，本地存储异常');
+                globalData = {};
+            }
+        }
+
+        // 2. 保存数据到本地存储
+        function saveData(newData) {
+            globalData = newData; // 更新本地缓存
+            try {
+                // 写入本地存储
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+                console.log('数据已保存至本地');
+            } catch (e) {
+                console.error('保存本地数据失败', e);
+                alert('保存失败，请检查浏览器本地存储权限');
+            }
+        }
+
+        // --- 原有赛事业务逻辑完全保留，无改动 ---
+
+        function renderPlayerInputs() {
+            const container = document.getElementById('player-inputs');
+            container.innerHTML = '';
+            for (let i = 1; i <= 6; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `选手 ${i} 账号名`;
+                input.id = `player-${i}`;
+                container.appendChild(input);
+            }
+        }
+
+        function savePlayers() {
+            const players = [];
+            for (let i = 1; i <= 6; i++) {
+                const val = document.getElementById(`player-${i}`).value.trim();
+                if (!val) { alert('请填写所有6位选手的账号名！'); return; }
+                players.push(val);
+            }
+            const data = { ...globalData, players, groups: null, matches: null, knockout: null };
+            saveData(data);
+            alert('选手保存成功！');
+            renderGroupSelects();
+        }
+
+        function renderGroupSelects() {
+            const data = globalData;
+            if (!data || !data.players) return;
+            document.getElementById('group-section').style.display = 'block';
+            const players = data.players;
+            const renderSelect = (groupId) => {
+                const container = document.getElementById(`group-${groupId}-select`);
+                container.innerHTML = '';
+                for (let i = 0; i < 3; i++) {
+                    const select = document.createElement('select');
+                    select.id = `group-${groupId}-${i}`;
+                    select.innerHTML = '<option value="">请选择选手</option>' + players.map(p => `<option value="${p}">${p}</option>`).join('');
+                    container.appendChild(select); container.appendChild(document.createElement('br'));
+                }
+            };
+            renderSelect('a'); renderSelect('b');
+        }
+
+        function saveGroups() {
+            const getGroup = (groupId) => {
+                const group = [];
+                for (let i = 0; i < 3; i++) {
+                    const val = document.getElementById(`group-${groupId}-${i}`).value;
+                    if (!val) return null; group.push(val);
+                }
+                if (new Set(group).size !== 3) return null;
+                return group;
+            };
+            const groupA = getGroup('a'); const groupB = getGroup('b');
+            if (!groupA || !groupB) { alert('请为每组选择3位不重复的选手！'); return; }
+            const allSelected = [...groupA, ...groupB];
+            const data = globalData;
+            if (new Set(allSelected).size !== 6 || !data.players.every(p => allSelected.includes(p))) {
+                alert('请确保所有6位选手都被分到不同的组！'); return;
+            }
+            
+            // 获取轮数
+            const rounds = parseInt(document.getElementById('rounds-select').value) || 1;
+
+            // 修改生成比赛函数，增加轮次参数
+            const generateMatches = (group, groupId, totalRounds) => {
+                const matches = [];
+                for (let r = 0; r < totalRounds; r++) {
+                    for (let i = 0; i < group.length; i++) {
+                        for (let j = i + 1; j < group.length; j++) {
+                            let p1 = group[i];
+                            let p2 = group[j];
+                            // 如果是偶数轮（第2轮、第4轮），交换主客场
+                            if (r % 2 === 1) {
+                                [p1, p2] = [p2, p1];
+                            }
+                            matches.push({ 
+                                id: `${groupId}-r${r}-${i}-${j}`, // 加入r防止id重复
+                                group: groupId, 
+                                round: r + 1, // 保存是第几轮
+                                player1: p1, 
+                                player2: p2, 
+                                result: null, 
+                                crownDiff: 0 
+                            });
+                        }
+                    }
+                }
+                return matches;
+            };
+
+            const newData = { 
+                ...data, 
+                groups: { a: groupA, b: groupB }, 
+                rounds: rounds, // 保存轮数设置
+                matches: [...generateMatches(groupA, 'a', rounds), ...generateMatches(groupB, 'b', rounds)],
+                knockout: null 
+            };
+            saveData(newData);
+            alert('分组保存成功，小组赛已生成！');
+            renderGroupStage();
+        }
+
+        function renderGroupStage() {
+            const data = globalData;
+            if (!data || !data.matches) return;
+            document.getElementById('group-stage-section').style.display = 'block';
+            
+            const renderGroupMatches = (groupId) => {
+                const container = document.getElementById(`group-${groupId}-matches`);
+                const matches = data.matches.filter(m => m.group === groupId);
+                container.innerHTML = '<h4>⚔️ 比赛结果录入 ⚔️</h4>';
+                
+                // 按轮次分组
+                const rounds = {};
+                matches.forEach(m => {
+                    const r = m.round || 1; // 兼容旧数据
+                    if (!rounds[r]) rounds[r] = [];
+                    rounds[r].push(m);
+                });
+
+                // 渲染每一轮
+                Object.keys(rounds).sort((a,b) => a-b).forEach(r => {
+                    const roundTitle = document.createElement('div');
+                    roundTitle.className = 'round-header';
+                    roundTitle.innerHTML = `<i class="fas fa-chess"></i> 第 ${r} 轮`;
+                    container.appendChild(roundTitle);
+
+                    rounds[r].forEach(match => {
+                        const div = document.createElement('div');
+                        div.className = 'match';
+                        div.innerHTML = `
+                            <span><i class="fas fa-shield"></i> ${match.player1}</span>
+                            <select id="result-${match.id}" onchange="updateMatch('${match.id}')">
+                                <option value="">未开始</option>
+                                <option value="player1_win" ${match.result === 'player1_win' ? 'selected' : ''}>${match.player1} 胜</option>
+                                <option value="draw" ${match.result === 'draw' ? 'selected' : ''}>平局</option>
+                                <option value="player2_win" ${match.result === 'player2_win' ? 'selected' : ''}>${match.player2} 胜</option>
+                            </select>
+                            <span><i class="fas fa-shield"></i> ${match.player2}</span>
+                            <input type="number" id="crown-${match.id}" placeholder="净胜皇冠" 
+                                value="${match.crownDiff || ''}" onchange="updateMatch('${match.id}')">
+                        `;
+                        container.appendChild(div);
+                    });
+                });
+            };
+            renderGroupMatches('a'); renderGroupMatches('b'); renderRankings();
+        }
+
+        function updateMatch(matchId) {
+            const data = globalData;
+            const match = data.matches.find(m => m.id === matchId);
+            if (!match) return;
+            match.result = document.getElementById(`result-${matchId}`).value || null;
+            match.crownDiff = parseInt(document.getElementById(`crown-${matchId}`).value) || 0;
+            saveData(data);
+            renderRankings();
+        }
+
+        function renderRankings() {
+            const data = globalData;
+            if (!data || !data.groups) return;
+            const calculateRanking = (groupId) => {
+                const group = data.groups[groupId];
+                const matches = data.matches.filter(m => m.group === groupId);
+                const stats = {};
+                group.forEach(p => { stats[p] = { points: 0, crownDiff: 0 }; });
+                matches.forEach(m => {
+                    if (!m.result) return;
+                    const p1 = m.player1; const p2 = m.player2;
+                    if (m.result === 'player1_win') { stats[p1].points += 3; stats[p1].crownDiff += m.crownDiff; stats[p2].crownDiff -= m.crownDiff; } 
+                    else if (m.result === 'player2_win') { stats[p2].points += 3; stats[p2].crownDiff += m.crownDiff; stats[p1].crownDiff -= m.crownDiff; } 
+                    else if (m.result === 'draw') { stats[p1].points += 1; stats[p2].points += 1; }
+                });
+                return group.sort((a, b) => {
+                    if (stats[b].points !== stats[a].points) return stats[b].points - stats[a].points;
+                    return stats[b].crownDiff - stats[a].crownDiff;
+                }).map(p => ({ player: p, ...stats[p] }));
+            };
+            const renderRankingTable = (groupId, ranking) => {
+                const table = document.getElementById(`group-${groupId}-ranking`);
+                table.innerHTML = `<tr><th>排名</th><th>选手</th><th>积分</th><th>净胜皇冠</th></tr>` +
+                    ranking.map((r, i) => `<tr style="${i < 2 ? 'background: #e8f5e9; font-weight: bold;' : ''}"><td>${i + 1}</td><td>${r.player}</td><td>${r.points}</td><td>${r.crownDiff}</td></tr>`).join('');
+            };
+            const rankingA = calculateRanking('a'); const rankingB = calculateRanking('b');
+            renderRankingTable('a', rankingA); renderRankingTable('b', rankingB);
+            data.rankings = { a: rankingA, b: rankingB };
+        }
+
+        function generateKnockout() {
+            const data = globalData;
+            if (!data || !data.rankings) { alert('请先完成小组赛并确保每组前两名已确定！'); return; }
+            const a1 = data.rankings.a[0].player; const a2 = data.rankings.a[1].player;
+            const b1 = data.rankings.b[0].player; const b2 = data.rankings.b[1].player;
+            data.knockout = {
+                semi1: { player1: a1, player2: b2, result: null, crownDiff: 0, winner: null },
+                semi2: { player1: a2, player2: b1, result: null, crownDiff: 0, winner: null },
+                final: { player1: null, player2: null, result: null, crownDiff: 0, winner: null }
+            };
+            saveData(data);
+            alert('淘汰赛对阵已生成！');
+            renderKnockout();
+        }
+
+        function renderKnockout() {
+            const data = globalData;
+            if (!data || !data.knockout) return;
+            document.getElementById('knockout-section').style.display = 'block';
+            const k = data.knockout;
+            if (k.semi1.winner && k.semi2.winner) {
+                k.final.player1 = k.semi1.winner; k.final.player2 = k.semi2.winner;
+            }
+            const renderBracketMatch = (match, matchId) => {
+                if (!match.player1 || !match.player2) return '<div class="bracket-match">等待选手确定...</div>';
+                return `
+                    <div class="bracket-match ${match.winner ? 'winner' : ''}">
+                        <div style="margin-bottom: 10px;"><strong><i class="fas fa-shield"></i> ${match.player1}</strong> vs <strong>${match.player2} <i class="fas fa-shield"></i></strong></div>
+                        <select id="k-result-${matchId}" onchange="updateKnockout('${matchId}')">
+                            <option value="">未开始</option>
+                            <option value="player1_win" ${match.result === 'player1_win' ? 'selected' : ''}>${match.player1} 胜</option>
+                            <option value="draw" ${match.result === 'draw' ? 'selected' : ''}>平局（需重赛）</option>
+                            <option value="player2_win" ${match.result === 'player2_win' ? 'selected' : ''}>${match.player2} 胜</option>
+                        </select>
+                        <input type="number" id="k-crown-${matchId}" placeholder="净胜皇冠" 
+                            value="${match.crownDiff || ''}" onchange="updateKnockout('${matchId}')">
+                        ${match.winner ? `<div style="margin-top: 10px; color: #4CAF50;">👑 晋级: ${match.winner} 👑</div>` : ''}
+                    </div>
+                `;
+            };
+            document.getElementById('knockout-bracket').innerHTML = `
+                <div class="bracket-round"><h4><i class="fas fa-fencing"></i> 半决赛</h4>${renderBracketMatch(k.semi1, 'semi1')}${renderBracketMatch(k.semi2, 'semi2')}</div>
+                <div class="bracket-round"><h4><i class="fas fa-crown"></i> 总决赛</h4>${renderBracketMatch(k.final, 'final')}</div>
+            `;
+        }
+
+        function updateKnockout(matchId) {
+            const data = globalData;
+            const match = data.knockout[matchId];
+            if (!match || !match.player1 || !match.player2) return;
+            match.result = document.getElementById(`k-result-${matchId}`).value || null;
+            match.crownDiff = parseInt(document.getElementById(`k-crown-${matchId}`).value) || 0;
+            match.winner = (match.result === 'player1_win') ? match.player1 : (match.result === 'player2_win' ? match.player2 : null);
+            
+            saveData(data);
+            renderKnockout();
+        }
+
+        function resetData() {
+            if (confirm('确定要重置所有数据吗？这将清除所有选手、分组和比赛结果！')) {
+                saveData({}); // 清空本地存储
+                location.reload(); // 刷新页面
+            }
+        }
+    </script>
+</body>
+</html>
