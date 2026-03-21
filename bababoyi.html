@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>川三甲第二届辛巴巴博弈杯</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "MedievalSharp", "Microsoft Yahei", sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #fbbf24;
+            padding: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmYmJmMjQ0MCI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NGgtMXYtNHptLTIgMGg0djFoLTR2LTF6bS0xMi0yaDF2NGgtMXYtNHptMCAyaDR2MWgtNHYtMXptMi02aDF2NGgtMXYtNHptLTIgMGg0djFoLTR2LTF6bTAgMnYtMWgtNGgtMS0ydjFoNWg1djFoLTJ6bS0yIDEyaDF2NGgtMXYtNHptMCAyaDR2MWgtNHYtMXptMi02aDF2NGgtMXYtNHptLTIgMGg0djFoLTR2LTF6bTAgMnYtMWgtNGgtMS0ydjFoNWg1djFoLTJ6bTItMTJoMXY0aC0xdi00em0wIDJoNHYxaC00di0xem0yLTZoMXY0aC0xdi00em0tMiAwajR2MWgtNHYtMXptMCAyVjQ0aC00aC0xLTJ2MWg1aDV2MWgtMnoiLz48L2c+PC9nPjwvc3ZnPg==');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .section {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid #fbbf2440;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(251, 191, 36, 0.2);
+        }
+        
+        .section-title {
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fef3c7;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .player-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .player-tag {
+            background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
+            padding: 10px 16px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid #fbbf2430;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .player-tag:hover {
+            transform: scale(1.05);
+            border-color: #fbbf2460;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 24px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 100%);
+            color: #0f172a;
+            box-shadow: 0 4px 8px rgba(251, 191, 36, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(251, 191, 36, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(145deg, #7c3aed 0%, #6d28d9 100%);
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(124, 58, 237, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(124, 58, 237, 0.4);
+        }
+        
+        .group-box {
+            margin-bottom: 20px;
+        }
+        
+        .group-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #fef3c7;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .group-player {
+            background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
+            padding: 10px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #fbbf2430;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .group-player:hover {
+            border-color: #fbbf2460;
+            transform: translateX(4px);
+        }
+        
+        .round-info {
+            text-align: center;
+            margin: 18px 0;
+            font-size: 15px;
+        }
+        
+        .round-tag {
+            background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
+            padding: 8px 16px;
+            border-radius: 24px;
+            border: 1px solid #fbbf2430;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .match-box {
+            margin-bottom: 24px;
+        }
+        
+        .match-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #fef3c7;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .match-item {
+            background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+            border: 1px solid #fbbf2430;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .match-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #fbbf24, #7c3aed);
+        }
+        
+        .match-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .match-player {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .match-result {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #fbbf2430;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .match-score {
+            padding-left: 12px;
+            font-size: 14px;
+            color: #fef3c7;
+        }
+        
+        .rank-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .rank-table th, .rank-table td {
+            border: 1px solid #fbbf2430;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .rank-table th {
+            background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
+            color: #fef3c7;
+            font-weight: bold;
+        }
+        
+        .rank-table tr:nth-child(1) td {
+            background: linear-gradient(145deg, #fbbf2430 0%, #f59e0b30 100%);
+            font-weight: bold;
+            color: #fef3c7;
+        }
+        
+        .rank-table tr:hover {
+            background: rgba(251, 191, 36, 0.05);
+        }
+        
+        .knockout-box {
+            margin-bottom: 24px;
+        }
+        
+        .knockout-title {
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #fef3c7;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .final-box {
+            text-align: center;
+            margin-top: 32px;
+        }
+        
+        .final-box .match-item {
+            display: inline-block;
+            min-width: 280px;
+            background: linear-gradient(145deg, #7c3aed 0%, #6d28d9 100%);
+            border-color: #fbbf2460;
+        }
+        
+        .final-box .match-result {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fef3c7;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            
+            .title {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .section {
+                padding: 16px;
+                margin-bottom: 20px;
+            }
+            
+            .section-title {
+                font-size: 17px;
+            }
+            
+            .player-grid {
+                gap: 10px;
+            }
+            
+            .player-tag {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            
+            .group-player {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            
+            .match-item {
+                padding: 12px;
+            }
+            
+            .rank-table th, .rank-table td {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        
+        .section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        
+        .section:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">👑 川三甲第二届辛巴巴博弈杯 皇室战争锦标赛 🛡️</h1>
+
+    <!-- 1. 征召挑战者 -->
+    <div class="section">
+        <h2 class="section-title">👥 1. 6位参赛选手</h2>
+        <div class="player-grid">
+            <div class="player-tag">光影城府</div>
+            <div class="player-tag">月仙风铃</div>
+            <div class="player-tag">OUTLAW</div>
+            <div class="player-tag">张大你的嘴</div>
+            <div class="player-tag">反复发热的复古套头</div>
+            <div class="player-tag">真的不会玩</div>
+        </div>
+    </div>
+
+    <!-- 2. 分编小组 -->
+    <div class="section">
+        <h2 class="section-title">🚩 2. 小组积分赛阶段：分组名单</h2>
+        
+        <div class="group-box">
+            <h3 class="group-title">⚔️ A组</h3>
+            <div class="group-player">OUTLAW</div>
+            <div class="group-player">月仙风铃</div>
+            <div class="group-player">真的不会玩</div>
+        </div>
+
+        <div class="group-box">
+            <h3 class="group-title">👕 B组</h3>
+            <div class="group-player">光影城府</div>
+            <div class="group-player">张大你的嘴</div>
+            <div class="group-player">反复发热的复古套头</div>
+        </div>
+
+        <div class="round-info">
+            <span>🔁 循环赛轮数：</span>
+            <span class="round-tag">2轮（双循环）</span>
+        </div>
+    </div>
+
+    <!-- 3. 小组内循环 -->
+    <div class="section">
+        <h2 class="section-title">🤜 3. 小组内循环赛</h2>
+
+        <!-- A组战报 -->
+        <div class="match-box">
+            <h3 class="group-title">⚔️ A组战报</h3>
+
+            <h5 class="match-title">📌 第1轮</h5>
+            <div class="match-item">
+                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-result">OUTLAW 胜</div>
+                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-score">1</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-result">月仙风铃 胜</div>
+                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-score">2</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-result">OUTLAW 胜</div>
+                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-score">1</div>
+            </div>
+
+            <h5 class="match-title">📌 第2轮</h5>
+            <div class="match-item">
+                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-result">OUTLAW 胜</div>
+                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-score">3</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-result">月仙风铃 胜</div>
+                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-score">2</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-result">月仙风铃 胜</div>
+                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-score">1</div>
+            </div>
+
+            <h3 class="group-title">🏆 A组排名</h3>
+            <table class="rank-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>选手</th>
+                        <th>积分</th>
+                        <th>净胜皇冠</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>OUTLAW</td>
+                        <td>9</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>月仙风铃</td>
+                        <td>9</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>真的不会玩</td>
+                        <td>0</td>
+                        <td>-8</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- B组战报 -->
+        <div class="match-box">
+            <h3 class="group-title">👕 B组战报</h3>
+            <h4 class="match-title" style="text-align: center;">⚔️ 比赛结果录入 ⚔️</h4>
+
+            <h5 class="match-title">📌 第1轮</h5>
+            <div class="match-item">
+                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-result">未开始</div>
+                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-score">净胜皇冠</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-result">光影城府 胜</div>
+                <div class="match-player">🔽 光影城府</div>
+                <div class="match-score">3</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-result">光影城府 胜</div>
+                <div class="match-player">🔽 光影城府</div>
+                <div class="match-score">2</div>
+            </div>
+
+            <h5 class="match-title">📌 第2轮</h5>
+            <div class="match-item">
+                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-result">未开始</div>
+                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-score">净胜皇冠</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 光影城府</div>
+                <div class="match-result">光影城府 胜</div>
+                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-score">1</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 光影城府</div>
+                <div class="match-result">反复发热的复古套头 胜</div>
+                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-score">1</div>
+            </div>
+
+            <h3 class="group-title">🏆 B组排名</h3>
+            <table class="rank-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>选手</th>
+                        <th>积分</th>
+                        <th>净胜皇冠</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>光影城府</td>
+                        <td>9</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>反复发热的复古套头</td>
+                        <td>3</td>
+                        <td>-1</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>张大你的嘴</td>
+                        <td>0</td>
+                        <td>-4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">晋级·生成淘汰赛</button>
+    </div>
+
+    <!-- 4. 淘汰赛 -->
+    <div class="section">
+        <h2 class="section-title">👑 4. 淘汰赛阶段</h2>
+
+        <div class="knockout-box">
+            <h3 class="knockout-title">半决赛</h3>
+            <div class="match-item">
+                <div class="match-player">🔽 OUTLAW vs 等待选手确定</div>
+                <div class="match-result">未开始</div>
+                <div class="match-score">净胜皇冠</div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-player">🔽 月仙风铃 vs 等待选手确定</div>
+                <div class="match-result">未开始</div>
+                <div class="match-score">净胜皇冠</div>
+            </div>
+        </div>
+
+        <div class="final-box">
+            <h3 class="knockout-title">👑 总决赛</h3>
+            <div class="match-item" style="display: inline-block; min-width: 250px;">
+                <div class="match-result">等待选手确定...</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
