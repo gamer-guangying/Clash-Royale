@@ -6,12 +6,15 @@
     <title>川三甲第二届辛巴巴博弈杯</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "MedievalSharp", "Microsoft Yahei", sans-serif;
+            font-family: "Noto Serif SC", "ZCOOL XiaoWei", "Microsoft YaHei", sans-serif;
         }
         
         body {
@@ -38,11 +41,17 @@
         
         .title {
             text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 26px;
+            font-weight: 700;
             margin-bottom: 24px;
-            text-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
-            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(251, 191, 36, 0.3), 0 0 20px rgba(251, 191, 36, 0.2);
+            letter-spacing: 2px;
+            background: linear-gradient(145deg, rgba(251, 191, 36, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid #fbbf2440;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+            font-family: "Ma Shan Zheng", "ZCOOL XiaoWei", "Noto Serif SC", serif;
         }
         
         .section {
@@ -53,6 +62,25 @@
             border: 2px solid #fbbf2440;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.1);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #fbbf24, #7c3aed, #fbbf24);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
         
         .section:hover {
@@ -61,14 +89,16 @@
         }
         
         .section-title {
-            font-size: 19px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 600;
             margin-bottom: 18px;
             display: flex;
             align-items: center;
             gap: 10px;
             color: #fef3c7;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: "ZCOOL XiaoWei", "Noto Serif SC", serif;
+            letter-spacing: 1px;
         }
         
         .player-grid {
@@ -84,13 +114,31 @@
             border-radius: 24px;
             text-align: center;
             border: 1px solid #fbbf2430;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(251, 191, 36, 0.1);
             transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .player-tag::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .player-tag:hover::before {
+            left: 100%;
         }
         
         .player-tag:hover {
             transform: scale(1.05);
             border-color: #fbbf2460;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.2);
         }
         
         .btn-group {
@@ -153,8 +201,8 @@
         
         .group-title {
             text-align: center;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 19px;
+            font-weight: 600;
             margin-bottom: 14px;
             display: flex;
             align-items: center;
@@ -162,6 +210,8 @@
             gap: 10px;
             color: #fef3c7;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: "ZCOOL XiaoWei", "Noto Serif SC", serif;
+            letter-spacing: 1px;
         }
         
         .group-player {
@@ -170,13 +220,32 @@
             border-radius: 12px;
             margin-bottom: 12px;
             border: 1px solid #fbbf2430;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(251, 191, 36, 0.1);
             transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .group-player::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .group-player:hover::before {
+            opacity: 1;
         }
         
         .group-player:hover {
             border-color: #fbbf2460;
             transform: translateX(4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.2);
         }
         
         .round-info {
@@ -199,11 +268,13 @@
         }
         
         .match-title {
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 17px;
+            font-weight: 600;
             margin-bottom: 12px;
             color: #fef3c7;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: "ZCOOL XiaoWei", "Noto Serif SC", serif;
+            letter-spacing: 1px;
         }
         
         .match-item {
@@ -212,7 +283,7 @@
             padding: 14px;
             margin-bottom: 14px;
             border: 1px solid #fbbf2430;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(251, 191, 36, 0.1);
             transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
@@ -226,11 +297,23 @@
             right: 0;
             height: 3px;
             background: linear-gradient(90deg, #fbbf24, #7c3aed);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        
+        .match-item::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.3), transparent);
         }
         
         .match-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.2);
         }
         
         .match-player {
@@ -261,7 +344,20 @@
             background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+            position: relative;
+        }
+        
+        .rank-table::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #fbbf24, #7c3aed);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
         }
         
         .rank-table th, .rank-table td {
@@ -273,17 +369,25 @@
         .rank-table th {
             background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
             color: #fef3c7;
-            font-weight: bold;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: "ZCOOL XiaoWei", "Noto Serif SC", serif;
+            letter-spacing: 1px;
         }
         
         .rank-table tr:nth-child(1) td {
             background: linear-gradient(145deg, #fbbf2430 0%, #f59e0b30 100%);
             font-weight: bold;
             color: #fef3c7;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .rank-table tr:hover {
             background: rgba(251, 191, 36, 0.05);
+        }
+        
+        .rank-table tr:hover td {
+            border-color: #fbbf2460;
         }
         
         .knockout-box {
@@ -292,11 +396,13 @@
         
         .knockout-title {
             text-align: center;
-            font-size: 17px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 18px;
             color: #fef3c7;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: "ZCOOL XiaoWei", "Noto Serif SC", serif;
+            letter-spacing: 1px;
         }
         
         .final-box {
@@ -314,6 +420,147 @@
         .final-box .match-result {
             background: rgba(255, 255, 255, 0.1);
             color: #fef3c7;
+        }
+        
+        /* SVG图标样式 */
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            vertical-align: middle;
+            fill: currentColor;
+        }
+        
+        .icon-sm {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .icon-lg {
+            width: 32px;
+            height: 32px;
+        }
+        
+        /* 历届冠军框样式 */
+        .champions-section {
+            background: linear-gradient(145deg, #7c3aed 0%, #6d28d9 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 2px solid #fbbf2460;
+            box-shadow: 0 8px 16px rgba(124, 58, 237, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .champions-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #fbbf24, #7c3aed, #fbbf24);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        
+        .champions-section::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.3), transparent);
+        }
+        
+        .champions-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fef3c7;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+            font-family: "Ma Shan Zheng", "ZCOOL XiaoWei", serif;
+            letter-spacing: 2px;
+        }
+        
+        .champion-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #fbbf2430;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .champion-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .champion-item:hover::before {
+            opacity: 1;
+        }
+        
+        .champion-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.2);
+            border-color: #fbbf2460;
+        }
+        
+        .champion-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .champion-name {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fef3c7;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: "ZCOOL XiaoWei", "Noto Serif SC", serif;
+            letter-spacing: 1px;
+        }
+        
+        .champion-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #e2e8f0;
+        }
+        
+        .champion-detail:last-child {
+            margin-bottom: 0;
+        }
+        
+        .gold-text {
+            color: #fbbf24;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .silver-text {
+            color: #c0c0c0;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         /* 响应式设计 */
@@ -394,11 +641,70 @@
     </style>
 </head>
 <body>
-    <h1 class="title">👑 川三甲第二届辛巴巴博弈杯 皇室战争锦标赛 🛡️</h1>
+    <!-- 历届冠军 -->
+    <div class="champions-section">
+        <h2 class="champions-title">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+            历届冠军
+        </h2>
+        
+        <div class="champion-item">
+            <div class="champion-name">第一届锦标赛</div>
+            <div class="champion-detail">
+                <svg class="icon icon-sm" style="fill: #fbbf24;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span>冠军：</span>
+                <span class="gold-text">OUTLAW</span>
+            </div>
+            <div class="champion-detail">
+                <svg class="icon icon-sm" style="fill: #c0c0c0;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span>亚军：</span>
+                <span class="silver-text">光影城府</span>
+            </div>
+        </div>
+        
+        <div class="champion-item">
+            <div class="champion-name">第一届精英赛</div>
+            <div class="champion-detail">
+                <svg class="icon icon-sm" style="fill: #fbbf24;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span>冠军：</span>
+                <span class="gold-text">光影城府</span>
+            </div>
+            <div class="champion-detail">
+                <svg class="icon icon-sm" style="fill: #c0c0c0;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span>亚军：</span>
+                <span class="silver-text">OUTLAW</span>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="title">
+        <svg class="icon icon-lg" style="fill: #fbbf24;" viewBox="0 0 24 24">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+        川三甲第二届辛巴巴博弈杯 皇室战争锦标赛
+        <svg class="icon icon-lg" style="fill: #fbbf24;" viewBox="0 0 24 24">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+        </svg>
+    </h1>
 
     <!-- 1. 征召挑战者 -->
     <div class="section">
-        <h2 class="section-title">👥 1. 6位参赛选手</h2>
+        <h2 class="section-title">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            1. 6位参赛选手
+        </h2>
         <div class="player-grid">
             <div class="player-tag">光影城府</div>
             <div class="player-tag">月仙风铃</div>
@@ -411,81 +717,184 @@
 
     <!-- 2. 分编小组 -->
     <div class="section">
-        <h2 class="section-title">🚩 2. 小组积分赛阶段：分组名单</h2>
+        <h2 class="section-title">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
+            </svg>
+            2. 小组积分赛阶段：分组名单
+        </h2>
         
         <div class="group-box">
-            <h3 class="group-title">⚔️ A组</h3>
+            <h3 class="group-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M6 2l-4 4v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6l-4-4H6zm2 2h8v2H8V4zm8 12H8v-2h8v2zm0-4H8V8h8v4z"/>
+                </svg>
+                A组
+            </h3>
             <div class="group-player">OUTLAW</div>
             <div class="group-player">月仙风铃</div>
             <div class="group-player">真的不会玩</div>
         </div>
 
         <div class="group-box">
-            <h3 class="group-title">👕 B组</h3>
+            <h3 class="group-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M6 2l-4 4v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6l-4-4H6zm2 2h8v2H8V4zm8 12H8v-2h8v2zm0-4H8V8h8v4z"/>
+                </svg>
+                B组
+            </h3>
             <div class="group-player">光影城府</div>
             <div class="group-player">张大你的嘴</div>
             <div class="group-player">反复发热的复古套头</div>
         </div>
 
         <div class="round-info">
-            <span>🔁 循环赛轮数：</span>
+            <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+            </svg>
+            <span>循环赛轮数：</span>
             <span class="round-tag">2轮（双循环）</span>
         </div>
     </div>
 
     <!-- 3. 小组内循环 -->
     <div class="section">
-        <h2 class="section-title">🤜 3. 小组内循环赛</h2>
+        <h2 class="section-title">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86l-1.43-1.43L22 16.29z"/>
+            </svg>
+            3. 小组内循环赛
+        </h2>
 
         <!-- A组战报 -->
         <div class="match-box">
-            <h3 class="group-title">⚔️ A组战报</h3>
+            <h3 class="group-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M6 2l-4 4v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6l-4-4H6zm2 2h8v2H8V4zm8 12H8v-2h8v2zm0-4H8V8h8v4z"/>
+                </svg>
+                A组战报
+            </h3>
 
-            <h5 class="match-title">📌 第1轮</h5>
+            <h5 class="match-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>
+                </svg>
+                第1轮
+            </h5>
             <div class="match-item">
-                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    真的不会玩
+                </div>
                 <div class="match-result">OUTLAW 胜</div>
-                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    OUTLAW
+                </div>
                 <div class="match-score">1</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    真的不会玩
+                </div>
                 <div class="match-result">月仙风铃 胜</div>
-                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    月仙风铃
+                </div>
                 <div class="match-score">2</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    OUTLAW
+                </div>
                 <div class="match-result">OUTLAW 胜</div>
-                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    月仙风铃
+                </div>
                 <div class="match-score">1</div>
             </div>
 
-            <h5 class="match-title">📌 第2轮</h5>
+            <h5 class="match-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>
+                </svg>
+                第2轮
+            </h5>
             <div class="match-item">
-                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    OUTLAW
+                </div>
                 <div class="match-result">OUTLAW 胜</div>
-                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    真的不会玩
+                </div>
                 <div class="match-score">3</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    月仙风铃
+                </div>
                 <div class="match-result">月仙风铃 胜</div>
-                <div class="match-player">🔽 真的不会玩</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    真的不会玩
+                </div>
                 <div class="match-score">2</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 月仙风铃</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    月仙风铃
+                </div>
                 <div class="match-result">月仙风铃 胜</div>
-                <div class="match-player">🔽 OUTLAW</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    OUTLAW
+                </div>
                 <div class="match-score">1</div>
             </div>
 
-            <h3 class="group-title">🏆 A组排名</h3>
+            <h3 class="group-title">
+                <svg class="icon icon-sm" style="fill: #fbbf24;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                A组排名
+            </h3>
             <table class="rank-table">
                 <thead>
                     <tr>
@@ -520,54 +929,142 @@
 
         <!-- B组战报 -->
         <div class="match-box">
-            <h3 class="group-title">👕 B组战报</h3>
-            <h4 class="match-title" style="text-align: center;">⚔️ 比赛结果录入 ⚔️</h4>
+            <h3 class="group-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M6 2l-4 4v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6l-4-4H6zm2 2h8v2H8V4zm8 12H8v-2h8v2zm0-4H8V8h8v4z"/>
+                </svg>
+                B组战报
+            </h3>
+            <h4 class="match-title" style="text-align: center;">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86l-1.43-1.43L22 16.29z"/>
+                </svg>
+                比赛结果录入
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86l-1.43-1.43L22 16.29z"/>
+                </svg>
+            </h4>
 
-            <h5 class="match-title">📌 第1轮</h5>
+            <h5 class="match-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>
+                </svg>
+                第1轮
+            </h5>
             <div class="match-item">
-                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    张大你的嘴
+                </div>
                 <div class="match-result">未开始</div>
-                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    反复发热的复古套头
+                </div>
                 <div class="match-score">净胜皇冠</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    张大你的嘴
+                </div>
                 <div class="match-result">光影城府 胜</div>
-                <div class="match-player">🔽 光影城府</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    光影城府
+                </div>
                 <div class="match-score">3</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    反复发热的复古套头
+                </div>
                 <div class="match-result">光影城府 胜</div>
-                <div class="match-player">🔽 光影城府</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    光影城府
+                </div>
                 <div class="match-score">2</div>
             </div>
 
-            <h5 class="match-title">📌 第2轮</h5>
+            <h5 class="match-title">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M16 9v-4l8 7-8 7v-4h-8v-6h8zm-16-7v20h14v-2h-12v-16h12v-2h-14z"/>
+                </svg>
+                第2轮
+            </h5>
             <div class="match-item">
-                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    反复发热的复古套头
+                </div>
                 <div class="match-result">未开始</div>
-                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    张大你的嘴
+                </div>
                 <div class="match-score">净胜皇冠</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 光影城府</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    光影城府
+                </div>
                 <div class="match-result">光影城府 胜</div>
-                <div class="match-player">🔽 张大你的嘴</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    张大你的嘴
+                </div>
                 <div class="match-score">1</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 光影城府</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    光影城府
+                </div>
                 <div class="match-result">反复发热的复古套头 胜</div>
-                <div class="match-player">🔽 反复发热的复古套头</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    反复发热的复古套头
+                </div>
                 <div class="match-score">1</div>
             </div>
 
-            <h3 class="group-title">🏆 B组排名</h3>
+            <h3 class="group-title">
+                <svg class="icon icon-sm" style="fill: #fbbf24;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                B组排名
+            </h3>
             <table class="rank-table">
                 <thead>
                     <tr>
@@ -605,25 +1102,45 @@
 
     <!-- 4. 淘汰赛 -->
     <div class="section">
-        <h2 class="section-title">👑 4. 淘汰赛阶段</h2>
+        <h2 class="section-title">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+            4. 淘汰赛阶段
+        </h2>
 
         <div class="knockout-box">
             <h3 class="knockout-title">半决赛</h3>
             <div class="match-item">
-                <div class="match-player">🔽 OUTLAW vs 等待选手确定</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    OUTLAW vs 等待选手确定
+                </div>
                 <div class="match-result">未开始</div>
                 <div class="match-score">净胜皇冠</div>
             </div>
 
             <div class="match-item">
-                <div class="match-player">🔽 月仙风铃 vs 等待选手确定</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    月仙风铃 vs 等待选手确定
+                </div>
                 <div class="match-result">未开始</div>
                 <div class="match-score">净胜皇冠</div>
             </div>
         </div>
 
         <div class="final-box">
-            <h3 class="knockout-title">👑 总决赛</h3>
+            <h3 class="knockout-title">
+                <svg class="icon icon-sm" style="fill: #fbbf24;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                总决赛
+            </h3>
             <div class="match-item" style="display: inline-block; min-width: 250px;">
                 <div class="match-result">等待选手确定...</div>
             </div>
