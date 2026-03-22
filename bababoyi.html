@@ -375,7 +375,7 @@
             letter-spacing: 1px;
         }
         
-        .rank-table tr:nth-child(1) td {
+        .rank-table tr:nth-child(-n+2) td {
             background: linear-gradient(145deg, #fbbf2430 0%, #f59e0b30 100%);
             font-weight: bold;
             color: #fef3c7;
@@ -685,6 +685,24 @@
                 <span class="silver-text">OUTLAW</span>
             </div>
         </div>
+        
+        <div class="champion-item">
+            <div class="champion-name">第二届锦标赛</div>
+            <div class="champion-detail">
+                <svg class="icon icon-sm" style="fill: #fbbf24;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span>冠军：</span>
+                <span class="gold-text">OUTLAW</span>
+            </div>
+            <div class="champion-detail">
+                <svg class="icon icon-sm" style="fill: #c0c0c0;" viewBox="0 0 24 24">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span>亚军：</span>
+                <span class="silver-text">光影城府</span>
+            </div>
+        </div>
     </div>
 
     <h1 class="title">
@@ -958,14 +976,14 @@
                     </svg>
                     张大你的嘴
                 </div>
-                <div class="match-result">未开始</div>
+                <div class="match-result">反复发热的复古套头 胜</div>
                 <div class="match-player">
                     <svg class="icon icon-sm" viewBox="0 0 24 24">
                         <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
                     </svg>
                     反复发热的复古套头
                 </div>
-                <div class="match-score">净胜皇冠</div>
+                <div class="match-score">1</div>
             </div>
 
             <div class="match-item">
@@ -1015,14 +1033,14 @@
                     </svg>
                     反复发热的复古套头
                 </div>
-                <div class="match-result">未开始</div>
+                <div class="match-result">反复发热的复古套头 胜</div>
                 <div class="match-player">
                     <svg class="icon icon-sm" viewBox="0 0 24 24">
                         <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
                     </svg>
                     张大你的嘴
                 </div>
-                <div class="match-score">净胜皇冠</div>
+                <div class="match-score">1</div>
             </div>
 
             <div class="match-item">
@@ -1084,13 +1102,13 @@
                     <tr>
                         <td>2</td>
                         <td>反复发热的复古套头</td>
-                        <td>3</td>
+                        <td>6</td>
                         <td>-1</td>
                     </tr>
                     <tr>
                         <td>3</td>
                         <td>张大你的嘴</td>
-                        <td>0</td>
+                        <td>3</td>
                         <td>-4</td>
                     </tr>
                 </tbody>
@@ -1116,10 +1134,10 @@
                     <svg class="icon icon-sm" viewBox="0 0 24 24">
                         <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
                     </svg>
-                    OUTLAW vs 等待选手确定
+                    OUTLAW vs 反复发热的复古套头
                 </div>
-                <div class="match-result">未开始</div>
-                <div class="match-score">净胜皇冠</div>
+                <div class="match-result">OUTLAW 胜</div>
+                <div class="match-score">3</div>
             </div>
 
             <div class="match-item">
@@ -1127,10 +1145,10 @@
                     <svg class="icon icon-sm" viewBox="0 0 24 24">
                         <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
                     </svg>
-                    月仙风铃 vs 等待选手确定
+                    月仙风铃 vs 光影城府
                 </div>
-                <div class="match-result">未开始</div>
-                <div class="match-score">净胜皇冠</div>
+                <div class="match-result">光影城府 胜</div>
+                <div class="match-score">1</div>
             </div>
         </div>
 
@@ -1142,7 +1160,14 @@
                 总决赛
             </h3>
             <div class="match-item" style="display: inline-block; min-width: 250px;">
-                <div class="match-result">等待选手确定...</div>
+                <div class="match-player">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24">
+                        <path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/>
+                    </svg>
+                    OUTLAW vs 光影城府
+                </div>
+                <div class="match-result">OUTLAW 胜</div>
+                <div class="match-score">1</div>
             </div>
         </div>
     </div>
