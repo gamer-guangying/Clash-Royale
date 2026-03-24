@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八人双败淘汰制赛程统计</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        /* 选手录入区 */
+        .player-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .player-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .player-item label {
+            font-weight: bold;
+            color: #34495e;
+        }
+        .player-item input {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: #27ae60;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        /* 赛程区 */
+        .tournament-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .bracket-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .match-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .match-card h4 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .match-player {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .match-player input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: #f9f9f9;
+        }
+        .match-player input.winner {
+            background-color: #d4edda;
+            border-color: #27ae60;
+            font-weight: bold;
+        }
+        .match-player input.loser {
+            background-color: #f8d7da;
+            border-color: #e74c3c;
+        }
+        .match-result {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .match-result .btn {
+            flex: 1;
+            padding: 6px 0;
+            font-size: 0.85rem;
+        }
+        .rank-tag {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        /* 导出区 */
+        .export-area {
+            margin-top: 15px;
+        }
+        .export-area textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <h1>八人制双败淘汰制赛程统计系统</h1>
+
+    <!-- 选手录入区 -->
+    <div class="section">
+        <h2>参赛选手录入（A-H）</h2>
+        <div class="player-inputs" id="playerInputs">
+            <div class="player-item">
+                <label>A</label>
+                <input type="text" data-player="A" placeholder="输入选手名">
+            </div>
+            <div class="player-item">
+                <label>B</label>
+                <input type="text" data-player="B" placeholder="输入选手名">
+            </div>
+            <div class="player-item">
+                <label>C</label>
+                <input type="text" data-player="C" placeholder="输入选手名">
+            </div>
+            <div class="player-item">
+                <label>D</label>
+                <input type="text" data-player="D" placeholder="输入选手名">
+            </div>
+            <div class="player-item">
+                <label>E</label>
+                <input type="text" data-player="E" placeholder="输入选手名">
+            </div>
+            <div class="player-item">
+                <label>F</label>
+                <input type="text" data-player="F" placeholder="输入选手名">
+            </div>
+            <div class="player-item">
+                <label>G</label>
+                <input type="text" data-player="G" placeholder="输入选手名">
+            </div>
+            <div class="player-item">
+                <label>H</label>
+                <input type="text" data-player="H" placeholder="输入选手名">
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" id="savePlayersBtn">保存选手到本地</button>
+            <button class="btn btn-warning" id="loadPlayersBtn">加载本地选手</button>
+        </div>
+    </div>
+
+    <!-- 赛程区 -->
+    <div class="section">
+        <h2>赛程对阵（比赛1-14）</h2>
+        <div class="tournament-container">
+            <!-- 胜者组第一轮 -->
+            <div class="bracket-column">
+                <h3 style="text-align: center; color: #3498db;">胜者组第一轮</h3>
+                <div class="match-card" data-match="1">
+                    <h4>比赛1</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="选手1">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="选手2">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+                <div class="match-card" data-match="2">
+                    <h4>比赛2</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="选手1">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="选手2">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+                <div class="match-card" data-match="3">
+                    <h4>比赛3</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="选手1">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="选手2">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+                <div class="match-card" data-match="4">
+                    <h4>比赛4</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="选手1">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="选手2">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 败者组第一轮+胜者组第二轮 -->
+            <div class="bracket-column">
+                <h3 style="text-align: center; color: #3498db;">胜者组第二轮</h3>
+                <div class="match-card" data-match="5">
+                    <h4>比赛5</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛1胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛2胜者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+                <div class="match-card" data-match="6">
+                    <h4>比赛6</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛3胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛4胜者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+
+                <h3 style="text-align: center; color: #e67e22; margin-top: 20px;">败者组第一轮</h3>
+                <div class="match-card" data-match="7">
+                    <h4>比赛7</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛1败者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛2败者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+                <div class="match-card" data-match="8">
+                    <h4>比赛8</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛3败者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛4败者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 败者组第二轮+胜者组决赛 -->
+            <div class="bracket-column">
+                <h3 style="text-align: center; color: #3498db;">胜者组决赛</h3>
+                <div class="match-card" data-match="11">
+                    <h4>比赛11</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛5胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛6胜者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+
+                <h3 style="text-align: center; color: #e67e22; margin-top: 20px;">败者组第二轮</h3>
+                <div class="match-card" data-match="9">
+                    <h4>比赛9</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛7胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛6败者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+                <div class="match-card" data-match="10">
+                    <h4>比赛10</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛8胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛5败者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 败者组第三/四轮+决赛 -->
+            <div class="bracket-column">
+                <h3 style="text-align: center; color: #e67e22;">败者组第三轮</h3>
+                <div class="match-card" data-match="12">
+                    <h4>比赛12</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛9胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛10胜者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                    <div class="rank-tag">败者：殿军</div>
+                </div>
+
+                <h3 style="text-align: center; color: #e67e22; margin-top: 20px;">败者组第四轮</h3>
+                <div class="match-card" data-match="13">
+                    <h4>比赛13</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛12胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛11败者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                    <div class="rank-tag">败者：季军</div>
+                </div>
+
+                <h3 style="text-align: center; color: #c0392b; margin-top: 20px;">总决赛</h3>
+                <div class="match-card" data-match="14">
+                    <h4>比赛14</h4>
+                    <div class="match-player">
+                        <input type="text" class="player1" readonly placeholder="比赛11胜者">
+                    </div>
+                    <div class="match-player">
+                        <input type="text" class="player2" readonly placeholder="比赛13胜者">
+                    </div>
+                    <div class="match-result">
+                        <button class="btn btn-success win-btn" data-player="1">左方胜</button>
+                        <button class="btn btn-success win-btn" data-player="2">右方胜</button>
+                    </div>
+                    <div class="rank-tag">胜者：冠军 | 败者：亚军</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group" style="margin-top: 20px;">
+            <button class="btn btn-primary" id="saveScheduleBtn">保存赛程到本地</button>
+            <button class="btn btn-warning" id="loadScheduleBtn">加载本地赛程</button>
+            <button class="btn btn-success" id="exportScheduleBtn">导出赛程文本</button>
+            <button class="btn btn-danger" id="resetBtn">重置所有数据</button>
+        </div>
+    </div>
+
+    <!-- 导出结果区 -->
+    <div class="section export-area">
+        <h2>赛程导出结果</h2>
+        <textarea id="exportResult" readonly placeholder="点击「导出赛程文本」按钮，生成的赛程将显示在这里..."></textarea>
+        <button class="btn btn-primary" id="copyBtn" style="margin-top: 10px;">复制文本</button>
+        <button class="btn btn-success" id="downloadBtn" style="margin-top: 10px; margin-left: 10px;">下载为TXT文件</button>
+    </div>
+
+    <script>
+        // 赛程依赖关系定义（完全匹配图中结构）
+        const matchDeps = {
+            1: { p1: 'A', p2: 'H' },
+            2: { p1: 'B', p2: 'G' },
+            3: { p1: 'C', p2: 'F' },
+            4: { p1: 'D', p2: 'E' },
+            5: { p1: { match: 1, type: 'winner' }, p2: { match: 2, type: 'winner' } },
+            6: { p1: { match: 3, type: 'winner' }, p2: { match: 4, type: 'winner' } },
+            7: { p1: { match: 1, type: 'loser' }, p2: { match: 2, type: 'loser' } },
+            8: { p1: { match: 3, type: 'loser' }, p2: { match: 4, type: 'loser' } },
+            9: { p1: { match: 7, type: 'winner' }, p2: { match: 6, type: 'loser' } },
+            10: { p1: { match: 8, type: 'winner' }, p2: { match: 5, type: 'loser' } },
+            11: { p1: { match: 5, type: 'winner' }, p2: { match: 6, type: 'winner' } },
+            12: { p1: { match: 9, type: 'winner' }, p2: { match: 10, type: 'winner' } },
+            13: { p1: { match: 12, type: 'winner' }, p2: { match: 11, type: 'loser' } },
+            14: { p1: { match: 11, type: 'winner' }, p2: { match: 13, type: 'winner' } },
+        };
+
+        // 全局数据
+        let players = {};
+        let matches = {};
+
+        // 初始化
+        window.onload = function() {
+            initData();
+            bindEvents();
+            updateAllMatches();
+        };
+
+        // 初始化数据
+        function initData() {
+            // 加载本地存储的选手
+            const savedPlayers = localStorage.getItem('doubleElimination_players');
+            players = savedPlayers ? JSON.parse(savedPlayers) : {
+                A: '', B: '', C: '', D: '',
+                E: '', F: '', G: '', H: ''
+            };
+            // 填充选手输入框
+            Object.keys(players).forEach(key => {
+                const input = document.querySelector(`input[data-player="${key}"]`);
+                if (input) input.value = players[key];
+            });
+
+            // 加载本地存储的赛程
+            const savedMatches = localStorage.getItem('doubleElimination_matches');
+            matches = savedMatches ? JSON.parse(savedMatches) : {};
+            // 初始化1-14号比赛
+            for (let i = 1; i <= 14; i++) {
+                if (!matches[i]) {
+                    matches[i] = {
+                        id: i,
+                        player1: '',
+                        player2: '',
+                        winner: '',
+                        loser: '',
+                        status: 'pending'
+                    };
+                }
+            }
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            // 选手保存按钮
+            document.getElementById('savePlayersBtn').addEventListener('click', savePlayers);
+            document.getElementById('loadPlayersBtn').addEventListener('click', loadPlayers);
+
+            // 赛程保存/加载按钮
+            document.getElementById('saveScheduleBtn').addEventListener('click', saveSchedule);
+            document.getElementById('loadScheduleBtn').addEventListener('click', loadSchedule);
+
+            // 胜负选择按钮
+            document.querySelectorAll('.win-btn').forEach(btn => {
+                btn.addEventListener('click', handleWin);
+            });
+
+            // 导出相关按钮
+            document.getElementById('exportScheduleBtn').addEventListener('click', exportSchedule);
+            document.getElementById('copyBtn').addEventListener('click', copyExportText);
+            document.getElementById('downloadBtn').addEventListener('click', downloadExportText);
+
+            // 重置按钮
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
+        }
+
+        // 保存选手
+        function savePlayers() {
+            document.querySelectorAll('input[data-player]').forEach(input => {
+                const key = input.dataset.player;
+                players[key] = input.value.trim();
+            });
+            localStorage.setItem('doubleElimination_players', JSON.stringify(players));
+            alert('选手信息已保存到本地！');
+            updateAllMatches();
+        }
+
+        // 加载选手
+        function loadPlayers() {
+            const savedPlayers = localStorage.getItem('doubleElimination_players');
+            if (!savedPlayers) {
+                alert('没有找到本地保存的选手信息！');
+                return;
+            }
+            players = JSON.parse(savedPlayers);
+            Object.keys(players).forEach(key => {
+                const input = document.querySelector(`input[data-player="${key}"]`);
+                if (input) input.value = players[key];
+            });
+            alert('选手信息已加载！');
+            updateAllMatches();
+        }
+
+        // 保存赛程
+        function saveSchedule() {
+            localStorage.setItem('doubleElimination_matches', JSON.stringify(matches));
+            alert('赛程数据已保存到本地！');
+        }
+
+        // 加载赛程
+        function loadSchedule() {
+            const savedMatches = localStorage.getItem('doubleElimination_matches');
+            if (!savedMatches) {
+                alert('没有找到本地保存的赛程数据！');
+                return;
+            }
+            matches = JSON.parse(savedMatches);
+            alert('赛程数据已加载！');
+            updateAllMatches();
+        }
+
+        // 处理胜负选择
+        function handleWin(e) {
+            const btn = e.target;
+            const matchCard = btn.closest('.match-card');
+            const matchId = parseInt(matchCard.dataset.match);
+            const winPlayer = btn.dataset.player;
+            const match = matches[matchId];
+
+            // 检查选手是否都已填充
+            if (!match.player1 || !match.player2) {
+                alert('该场比赛的选手还未确定，无法选择胜负！');
+                return;
+            }
+
+            // 更新胜负
+            match.winner = winPlayer === '1' ? match.player1 : match.player2;
+            match.loser = winPlayer === '1' ? match.player2 : match.player1;
+            match.status = 'finished';
+
+            // 更新UI
+            renderMatch(matchId);
+            // 更新后续依赖的比赛
+            updateDependentMatches(matchId);
+            // 自动保存赛程
+            saveSchedule();
+        }
+
+        // 更新所有比赛
+        function updateAllMatches() {
+            for (let i = 1; i <= 14; i++) {
+                updateMatchPlayers(i);
+                renderMatch(i);
+            }
+        }
+
+        // 更新单场比赛的选手
+        function updateMatchPlayers(matchId) {
+            const match = matches[matchId];
+            const deps = matchDeps[matchId];
+
+            // 处理选手1
+            if (typeof deps.p1 === 'string') {
+                // 初始选手
+                match.player1 = players[deps.p1] || '';
+            } else {
+                // 来自其他比赛
+                const sourceMatch = matches[deps.p1.match];
+                match.player1 = sourceMatch[deps.p1.type] || '';
+            }
+
+            // 处理选手2
+            if (typeof deps.p2 === 'string') {
+                match.player2 = players[deps.p2] || '';
+            } else {
+                const sourceMatch = matches[deps.p2.match];
+                match.player2 = sourceMatch[deps.p2.type] || '';
+            }
+
+            // 如果选手变化，重置比赛状态
+            if (match.status === 'finished' && (match.winner !== match.player1 && match.winner !== match.player2)) {
+                match.winner = '';
+                match.loser = '';
+                match.status = 'pending';
+            }
+        }
+
+        // 渲染单场比赛UI
+        function renderMatch(matchId) {
+            const match = matches[matchId];
+            const matchCard = document.querySelector(`.match-card[data-match="${matchId}"]`);
+            if (!matchCard) return;
+
+            const p1Input = matchCard.querySelector('.player1');
+            const p2Input = matchCard.querySelector('.player2');
+
+            // 填充选手
+            p1Input.value = match.player1;
+            p2Input.value = match.player2;
+
+            // 重置样式
+            p1Input.classList.remove('winner', 'loser');
+            p2Input.classList.remove('winner', 'loser');
+
+            // 标记胜负
+            if (match.status === 'finished') {
+                if (match.winner === match.player1) {
+                    p1Input.classList.add('winner');
+                    p2Input.classList.add('loser');
+                } else {
+                    p1Input.classList.add('loser');
+                    p2Input.classList.add('winner');
+                }
+            }
+
+            // 按钮禁用状态
+            const winBtns = matchCard.querySelectorAll('.win-btn');
+            if (!match.player1 || !match.player2) {
+                winBtns.forEach(btn => btn.disabled = true);
+            } else {
+                winBtns.forEach(btn => btn.disabled = false);
+            }
+        }
+
+        // 更新依赖该比赛的所有比赛
+        function updateDependentMatches(sourceMatchId) {
+            for (let matchId in matchDeps) {
+                const deps = matchDeps[matchId];
+                const p1Dep = deps.p1;
+                const p2Dep = deps.p2;
+
+                // 检查是否依赖源比赛
+                if (
+                    (typeof p1Dep === 'object' && p1Dep.match === sourceMatchId) ||
+                    (typeof p2Dep === 'object' && p2Dep.match === sourceMatchId)
+                ) {
+                    updateMatchPlayers(parseInt(matchId));
+                    renderMatch(parseInt(matchId));
+                    // 递归更新后续依赖
+                    updateDependentMatches(parseInt(matchId));
+                }
+            }
+        }
+
+        // 导出赛程
+        function exportSchedule() {
+            let exportText = '八人制双败淘汰制赛程记录\n\n';
+            exportText += '参赛选手：\n';
+            Object.keys(players).forEach(key => {
+                exportText += `${key}: ${players[key] || '未填写'}\n`;
+            });
+            exportText += '\n====================\n\n';
+            exportText += '赛程详情（按比赛编号排序）：\n\n';
+
+            for (let i = 1; i <= 14; i++) {
+                const match = matches[i];
+                exportText += `【比赛${i}】\n`;
+                exportText += `对阵：${match.player1 || '待定'} VS ${match.player2 || '待定'}\n`;
+                if (match.status === 'finished') {
+                    exportText += `结果：胜者 - ${match.winner}，败者 - ${match.loser}\n`;
+                } else {
+                    exportText += `状态：未进行\n`;
+                }
+                // 加排名标注
+                if (i === 12) exportText += `备注：本场败者为殿军\n`;
+                if (i === 13) exportText += `备注：本场败者为季军\n`;
+                if (i === 14) exportText += `备注：本场胜者为冠军，败者为亚军\n`;
+                exportText += '\n';
+            }
+
+            document.getElementById('exportResult').value = exportText;
+        }
+
+        // 复制导出文本
+        function copyExportText() {
+            const textarea = document.getElementById('exportResult');
+            if (!textarea.value) {
+                alert('请先导出赛程文本！');
+                return;
+            }
+            textarea.select();
+            document.execCommand('copy');
+            alert('赛程文本已复制到剪贴板！');
+        }
+
+        // 下载导出文本
+        function downloadExportText() {
+            const text = document.getElementById('exportResult').value;
+            if (!text) {
+                alert('请先导出赛程文本！');
+                return;
+            }
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = '八人双败淘汰制赛程记录.txt';
+            link.click();
+        }
+
+        // 重置所有数据
+        function resetAll() {
+            if (!confirm('确定要重置所有数据吗？选手信息和赛程记录都会被清空！')) {
+                return;
+            }
+            localStorage.removeItem('doubleElimination_players');
+            localStorage.removeItem('doubleElimination_matches');
+            // 清空输入框
+            document.querySelectorAll('input[data-player]').forEach(input => {
+                input.value = '';
+            });
+            // 重新初始化
+            initData();
+            updateAllMatches();
+            document.getElementById('exportResult').value = '';
+            alert('所有数据已重置！');
+        }
+    </script>
+</body>
+</html>
