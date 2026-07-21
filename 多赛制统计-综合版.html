@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>皇室战争 - 多赛制统计</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #273549;
+            --gold: #f0b429;
+            --gold-light: #fcd34d;
+            --gold-dark: #b8860b;
+            --blue: #3b82f6;
+            --blue-light: #60a5fa;
+            --blue-dark: #1d4ed8;
+            --red: #ef4444;
+            --green: #22c55e;
+            --orange: #f97316;
+            --silver: #c0c0c0;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --text-dark: #1e293b;
+            --border: #334155;
+            --crown-gradient: linear-gradient(135deg, #f0b429 0%, #fcd34d 40%, #e5a50a 70%, #b8860b 100%);
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+            --card-shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 10px -6px rgba(0, 0, 0, 0.3);
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-xs: 8px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 20%, rgba(240, 180, 41, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 15% 60%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        .container {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 12px 14px 28px;
+        }
+
+        /* ========== Header ========== */
+        .header {
+            text-align: center;
+            padding: 18px 16px 10px;
+            position: relative;
+        }
+        .header-icon {
+            display: inline-block;
+            font-size: 42px;
+            filter: drop-shadow(0 3px 8px rgba(240, 180, 41, 0.5));
+            animation: float 3s ease-in-out infinite;
+            line-height: 1;
+        }
+        @keyframes float {
+            0%,
+            100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .header h1 {
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            background: linear-gradient(180deg, #fcd34d 0%, #f0b429 40%, #d4a017 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 4px 0 2px;
+            line-height: 1.3;
+        }
+        .header .subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            font-weight: 500;
+        }
+        .header .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+        }
+
+        /* ========== Mode Selection ========== */
+        .mode-panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 14px;
+            margin-bottom: 14px;
+            box-shadow: var(--card-shadow-lg);
+            border: 1px solid var(--border);
+        }
+        .mode-panel .panel-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--blue-light);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mode-panel .panel-title .icon {
+            font-size: 1.2rem;
+        }
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .mode-chip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 8px;
+            background: var(--surface-light);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+            user-select: none;
+        }
+        .mode-chip:hover {
+            border-color: var(--blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .mode-chip.selected {
+            border-color: var(--gold);
+            background: rgba(240, 180, 41, 0.12);
+            box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.1);
+        }
+        .mode-chip .mode-icon {
+            font-size: 1.4rem;
+        }
+        .mode-chip .mode-name {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text);
+            text-align: center;
+        }
+        .mode-chip.selected .mode-name {
+            color: var(--gold-light);
+        }
+        .mode-chip .mode-desc {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+
+        /* ========== Player Selection Panel ========== */
+        .selection-panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 14px;
+            margin-bottom: 14px;
+            box-shadow: var(--card-shadow-lg);
+            border: 1px solid var(--border);
+        }
+        .selection-panel .panel-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--blue-light);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .selection-panel .panel-title .icon {
+            font-size: 1.2rem;
+        }
+        .selection-panel .selection-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .player-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        .player-chip {
+            flex: 0 0 calc(50% - 4px);
+            max-width: calc(50% - 4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--surface-light);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all var(--transition);
+            user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .player-chip:hover {
+            border-color: var(--blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .player-chip.selected {
+            border-color: var(--gold);
+            background: rgba(240, 180, 41, 0.12);
+            color: var(--gold-light);
+            box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.1);
+        }
+        .player-chip .check-icon {
+            display: none;
+            font-size: 0.9rem;
+        }
+        .player-chip.selected .check-icon {
+            display: inline;
+        }
+        .player-chip.current {
+            border-color: var(--blue);
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .position-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 12px;
+            background: var(--surface-light);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+            user-select: none;
+            min-height: 80px;
+        }
+        .position-slot:hover {
+            border-color: var(--blue);
+            background: rgba(59, 130, 246, 0.08);
+            border-style: solid;
+        }
+        .position-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+        .position-player {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .position-player.filled {
+            color: var(--gold-light);
+        }
+        .back-btn {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 12px;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--blue-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            margin-top: 8px;
+        }
+        .back-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--blue);
+        }
+        .selection-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .selection-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .selection-count .count-num {
+            color: var(--gold-light);
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+        .start-btn {
+            padding: 8px 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .start-btn.disabled {
+            background: var(--surface-light);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+        .start-btn.enabled {
+            background: var(--crown-gradient);
+            color: #1a1a1a;
+            box-shadow: 0 3px 12px rgba(240, 180, 41, 0.3);
+        }
+        .start-btn.enabled:hover {
+            box-shadow: 0 5px 18px rgba(240, 180, 41, 0.45);
+            transform: translateY(-1px);
+        }
+
+        /* ========== Ranking Panel ========== */
+        .ranking-panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 16px 14px;
+            margin-bottom: 14px;
+            box-shadow: var(--card-shadow-lg);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        .ranking-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--crown-gradient);
+            border-radius: 3px 3px 0 0;
+        }
+        .ranking-panel .panel-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--gold-light);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ranking-panel .panel-title .icon {
+            font-size: 1.2rem;
+        }
+        .rank-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .rank-table th {
+            text-align: center;
+            padding: 7px 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+        }
+        .rank-table th:first-child { width: 34px; }
+        .rank-table th:nth-child(2) { text-align: left; padding-left: 8px; }
+        .rank-table td {
+            text-align: center;
+            padding: 9px 4px;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            transition: all var(--transition);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .rank-table td:first-child { font-weight: 800; font-size: 0.85rem; }
+        .rank-table td:nth-child(2) { text-align: left; padding-left: 8px; font-weight: 600; }
+        .rank-table tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+        .rank-table .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #fff;
+            background: var(--surface-light);
+        }
+        .rank-1 .rank-badge {
+            background: var(--crown-gradient);
+            color: #1a1a1a;
+            box-shadow: 0 0 12px rgba(240, 180, 41, 0.6);
+            font-size: 0.9rem;
+        }
+        .rank-2 .rank-badge {
+            background: linear-gradient(135deg, #94a3b8 0%, #c0c9d4 50%, #94a3b8 100%);
+            color: #1a1a1a;
+            box-shadow: 0 0 8px rgba(148, 163, 184, 0.5);
+        }
+        .rank-1 td, .rank-2 td { font-weight: 700; }
+        .rank-1 { background: rgba(240, 180, 41, 0.08) !important; }
+        .rank-2 { background: rgba(148, 163, 184, 0.06) !important; }
+        .qualified-badge {
+            display: inline-block;
+            background: var(--crown-gradient);
+            color: #1a1a1a;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            letter-spacing: 0.05em;
+            margin-left: 3px;
+            white-space: nowrap;
+        }
+
+        /* ========== Round Robin Matches ========== */
+        .matches-section {
+            margin-bottom: 14px;
+        }
+        .round-group {
+            margin-bottom: 10px;
+        }
+        .round-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 2px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--blue-light);
+            text-transform: uppercase;
+        }
+        .round-header::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            border-radius: 1px;
+        }
+        .round-header .round-num {
+            background: var(--blue-dark);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        .match-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 12px 10px;
+            margin-bottom: 7px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid transparent;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .match-card:hover {
+            border-color: var(--border);
+            box-shadow: var(--card-shadow-lg);
+        }
+        .match-card.match-completed {
+            border-left: 3px solid var(--green);
+        }
+        .match-card.match-pending {
+            border-left: 3px solid transparent;
+        }
+        .match-player {
+            flex: 1;
+            font-weight: 600;
+            font-size: 0.82rem;
+            text-align: center;
+            line-height: 1.2;
+            word-break: break-word;
+            min-width: 0;
+            color: var(--text);
+            transition: color var(--transition);
+        }
+        .match-player.winner-highlight {
+            color: var(--gold-light);
+        }
+        .match-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .match-input {
+            width: 44px;
+            height: 44px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-xs);
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+        .match-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.15);
+            background: #1a2235;
+        }
+        .match-input.filled {
+            border-color: var(--green);
+            background: rgba(34, 197, 94, 0.06);
+            color: var(--green);
+        }
+        .match-input.filled-loser {
+            border-color: var(--red);
+            background: rgba(239, 68, 68, 0.06);
+            color: var(--red);
+        }
+        .match-vs {
+            font-weight: 800;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            letter-spacing: 0.05em;
+        }
+        .match-result-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: none;
+        }
+        .match-completed .match-result-dot { display: block; }
+        .dot-win { background: var(--green); box-shadow: 0 0 6px rgba(34, 197, 94, 0.6); }
+        .dot-lose { background: var(--red); box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
+        .dot-draw { background: var(--text-muted); }
+
+        /* ========== Double Elimination Bracket ========== */
+        .bracket-section {
+            margin-bottom: 14px;
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 10px !important;
+            grid-auto-flow: row !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        .bracket-column {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+        .bracket-match-card {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            min-width: 0 !important;
+        }
+        .bracket-column-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-left: 3px solid;
+        }
+        .bracket-column-title.winner-bracket {
+            color: var(--blue-light);
+            border-color: var(--blue);
+        }
+        .bracket-column-title.loser-bracket {
+            color: var(--orange);
+            border-color: var(--orange);
+        }
+        .bracket-column-title.final {
+            color: var(--gold-light);
+            border-color: var(--gold);
+        }
+        .bracket-match-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 8px 10px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .bracket-match-card:hover {
+            border-color: var(--gold);
+            box-shadow: var(--card-shadow-lg);
+        }
+        .bracket-match-card.completed {
+            border-left: 3px solid var(--green);
+        }
+        .bracket-match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .bracket-match-num {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--surface-light);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .bracket-match-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .bracket-player {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            border-radius: var(--radius-xs);
+            margin-bottom: 4px;
+            background: var(--surface-light);
+            transition: all var(--transition);
+        }
+        .bracket-player:last-child { margin-bottom: 0; }
+        .bracket-player.winner {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid var(--green);
+        }
+        .bracket-player.loser {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .bracket-player input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-align: center;
+            outline: none;
+            font-family: inherit;
+        }
+        .bracket-player input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .bracket-player-status {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .bracket-player-status.winner-text {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--green);
+        }
+        .bracket-player-name {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.65rem;
+            text-align: center;
+            outline: none;
+            font-family: inherit;
+            min-width: 0;
+        }
+        .bracket-player-name::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .bracket-score-wrapper {
+            flex-shrink: 0;
+        }
+        .bracket-score-input {
+            width: 32px;
+            height: 26px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            color: var(--gold-light);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-align: center;
+            outline: none;
+            font-family: inherit;
+            transition: all var(--transition);
+        }
+        .bracket-score-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(240, 180, 41, 0.2);
+        }
+        .bracket-score-input:readonly {
+            background: var(--surface-light);
+            border-color: var(--border);
+            cursor: default;
+        }
+        .bracket-vs {
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding: 4px 0;
+            letter-spacing: 0.1em;
+        }
+        .bracket-match-card.rematch {
+            background: linear-gradient(135deg, rgba(240, 180, 41, 0.1), var(--surface));
+            border-color: var(--gold);
+        }
+        .bracket-match-card.rematch .bracket-match-header {
+            color: var(--gold-light);
+        }
+        .bracket-player-status.loser-text {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red);
+        }
+        .bracket-result-btns {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .bracket-result-btns .btn {
+            flex: 1;
+            padding: 5px;
+            font-size: 0.65rem;
+        }
+        .rank-tag {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--orange);
+            padding: 3px;
+            background: rgba(249, 115, 22, 0.1);
+            border-radius: 4px;
+        }
+
+        /* ========== Player Positions Panel ========== */
+        .player-positions-panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 0;
+            margin-bottom: 14px;
+            box-shadow: var(--card-shadow-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .bracket-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+        .bracket-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 0.05em;
+        }
+        .bracket-container {
+            position: relative;
+            background: linear-gradient(135deg, #0c4a6e 0%, #0c4a6e 50%, #7f1d1d 50%, #7f1d1d 100%);
+            min-height: 400px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+        .bracket-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .bracket-grid {
+            display: grid;
+            gap: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        .bracket-grid-8 {
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, auto);
+        }
+        .bracket-grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, auto);
+        }
+        .bracket-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .match-node {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            width: 100%;
+            max-width: 140px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .match-node.winner {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        .match-node.loser {
+            border-color: rgba(220, 38, 38, 0.5);
+        }
+        .match-node.final {
+            border-color: rgba(240, 180, 41, 0.5);
+        }
+        .match-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 6px;
+            letter-spacing: 0.02em;
+        }
+        .player-card {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .player-card.winner {
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+            transform: scale(1.02);
+        }
+        .player-card.winner .player-name {
+            color: var(--green);
+        }
+        .player-card.winner {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .player-card.winner.zone {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: white;
+        }
+        .player-card.loser.zone {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: rgba(220, 38, 38, 0.5);
+            color: white;
+        }
+        .player-card.empty {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            color: var(--text-muted);
+            text-align: center;
+            justify-content: center;
+        }
+        .player-flag {
+            font-size: 0.8rem;
+        }
+        .player-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .vs-label {
+            text-align: center;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding: 2px 0;
+            letter-spacing: 0.1em;
+        }
+        .match-score {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-top: 6px;
+        }
+        .status-label {
+            text-align: center;
+            font-size: 0.55rem;
+            font-weight: 600;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-top: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+        }
+        .status-label.winner {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue-light);
+        }
+        .status-label.loser {
+            background: rgba(220, 38, 38, 0.2);
+            color: #f87171;
+        }
+        .status-label.champion {
+            background: linear-gradient(135deg, rgba(240, 180, 41, 0.8), rgba(240, 180, 41, 0.4));
+            color: white;
+            font-weight: 700;
+        }
+
+        /* ========== Button ========== */
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 11px 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+            white-space: nowrap;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary {
+            background: var(--crown-gradient);
+            color: #1a1a1a;
+            box-shadow: 0 3px 12px rgba(240, 180, 41, 0.3);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 5px 18px rgba(240, 180, 41, 0.45);
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: var(--surface-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #35445c;
+            border-color: #64748b;
+        }
+        .btn-danger {
+            background: transparent;
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--red);
+        }
+        .btn-success {
+            background: var(--green);
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #16a34a;
+        }
+        .btn-warning {
+            background: var(--orange);
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #ea580c;
+        }
+        .btn .btn-icon { font-size: 1rem; }
+
+        /* ========== Stats Summary ========== */
+        .stats-summary {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .stat-chip {
+            flex: 1;
+            min-width: 60px;
+            background: var(--surface);
+            border-radius: var(--radius-xs);
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+        }
+        .stat-chip .stat-val {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+        .stat-chip .stat-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            margin-top: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ========== Footer ========== */
+        .footer-note {
+            text-align: center;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            padding: 8px;
+            letter-spacing: 0.03em;
+        }
+
+        /* ========== Toast ========== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            border: 1px solid var(--border);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* ========== Mobile tweaks ========== */
+        @media (max-width: 400px) {
+            .match-card { padding: 10px 6px; gap: 3px; }
+            .match-player { font-size: 0.72rem; }
+            .match-input { width: 38px; height: 38px; font-size: 0.95rem; }
+            .match-vs { font-size: 0.65rem; }
+            .header h1 { font-size: 1.3rem; }
+            .rank-table { font-size: 0.7rem; }
+            .rank-table th { font-size: 0.6rem; padding: 5px 2px; }
+            .rank-table td { padding: 7px 2px; font-size: 0.68rem; }
+            .rank-table .rank-badge { width: 22px; height: 22px; font-size: 0.65rem; }
+            .qualified-badge { font-size: 0.55rem; padding: 2px 5px; }
+            .player-chip { font-size: 0.75rem; padding: 8px 6px; }
+            .bracket-player input { font-size: 0.75rem; }
+            .mode-chip { padding: 10px 4px; }
+            .mode-chip .mode-icon { font-size: 1.2rem; }
+            .mode-chip .mode-name { font-size: 0.68rem; }
+        }
+        @media (min-width: 401px) and (max-width: 560px) {
+            .match-player { font-size: 0.78rem; }
+            .match-input { width: 42px; height: 42px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-icon">👑</div>
+            <h1>皇室战争 · 多赛制</h1>
+            <p class="subtitle" id="subtitle">请选择赛制和选手</p>
+            <div class="badge-row" id="badgeRow">
+                <span class="badge"><span class="dot"></span>12名可选</span>
+                <span class="badge"><span class="dot"></span>多赛制支持</span>
+            </div>
+        </div>
+
+        <!-- 赛制选择面板 -->
+        <div class="mode-panel" id="modePanel">
+            <div class="panel-title">
+                <span class="icon">🏆</span>选择赛制
+            </div>
+            <div class="mode-grid">
+                <div class="mode-chip selected" data-mode="roundrobin" onclick="selectMode('roundrobin')">
+                    <span class="mode-icon">🔄</span>
+                    <span class="mode-name">大循环</span>
+                    <span class="mode-desc">4-10人</span>
+                </div>
+                <div class="mode-chip" data-mode="double4" onclick="selectMode('double4')">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">4人双败</span>
+                    <span class="mode-desc">固定4人</span>
+                </div>
+                <div class="mode-chip" data-mode="double8" onclick="selectMode('double8')">
+                    <span class="mode-icon">🏟️</span>
+                    <span class="mode-name">8人双败</span>
+                    <span class="mode-desc">固定8人</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 选手选择面板 -->
+        <div class="selection-panel" id="selectionPanel">
+            <div class="panel-title">
+                <span class="icon">👥</span>选择选手
+            </div>
+            <p class="selection-hint" id="selectionHint">请选择 4-10 名选手参赛</p>
+            <div class="player-grid" id="playerGrid">
+            </div>
+            <div class="selection-footer">
+                <span class="selection-count">已选 <span class="count-num" id="selectedCount">0</span>/10</span>
+                <button class="start-btn disabled" id="startBtn" onclick="startTournament()">
+                    开始比赛
+                </button>
+            </div>
+        </div>
+
+        <!-- 统计摘要 -->
+        <div class="stats-summary" id="statsSummary" style="display: none;">
+            <div class="stat-chip">
+                <div class="stat-val" id="statCompleted">0</div>
+                <div class="stat-label">已完成</div>
+            </div>
+            <div class="stat-chip">
+                <div class="stat-val" id="statRemaining">0</div>
+                <div class="stat-label">待进行</div>
+            </div>
+            <div class="stat-chip">
+                <div class="stat-val" id="statTotalCrowns">0</div>
+                <div class="stat-label">总皇冠</div>
+            </div>
+        </div>
+
+        <!-- 排名面板 -->
+        <div class="ranking-panel" id="rankingPanel" style="display: none;">
+            <div class="panel-title">
+                <span class="icon">🏆</span>实时积分榜
+            </div>
+            <table class="rank-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>选手</th>
+                        <th>胜场</th>
+                        <th>净胜皇冠</th>
+                        <th>总获得</th>
+                        <th>总失去</th>
+                    </tr>
+                </thead>
+                <tbody id="rankTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 赛程区域（单循环） -->
+        <div class="matches-section" id="matchesSection" style="display: none;">
+        </div>
+
+        <!-- 选手位置示意图（双败淘汰） -->
+        <div class="player-positions-panel" id="playerPositionsPanel" style="display: none;">
+            <div class="bracket-header">
+                <div class="bracket-title" id="bracketTitle">双败淘汰赛</div>
+            </div>
+            <div class="bracket-container" id="bracketContainer">
+                <svg class="bracket-svg" id="bracketSvg"></svg>
+                <div class="bracket-grid" id="bracketGrid">
+                </div>
+            </div>
+        </div>
+
+        <!-- 赛程区域（双败淘汰） -->
+        <div class="bracket-section" id="bracketSection" style="display: none;">
+        </div>
+
+        <!-- 按钮 -->
+        <div class="btn-row" id="btnRow" style="display: none;">
+            <button class="btn btn-primary" onclick="resetAllScores()" title="清空所有比分">
+                <span class="btn-icon">🔄</span> 重置比分
+            </button>
+            <button class="btn btn-secondary" onclick="fillDemoData()" title="填入演示数据查看效果">
+                <span class="btn-icon">📊</span> 演示数据
+            </button>
+            <button class="btn btn-danger" onclick="backToSelection()" title="返回重新选择">
+                <span class="btn-icon">↩️</span> 重新选择
+            </button>
+        </div>
+        <div class="footer-note" id="footerNote" style="display: none;">
+            每场输入双方皇冠数 · 自动判定胜负 · 实时更新排名
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (function() {
+            const allPlayers = [
+                { id: 0, name: 'outlaw' },
+                { id: 1, name: 'Lucas' },
+                { id: 2, name: '光影城府' },
+                { id: 3, name: '张大你的嘴' },
+                { id: 4, name: '路西法' },
+                { id: 5, name: '无言胜有言' },
+                { id: 6, name: '复古套头' },
+                { id: 7, name: '东沈村' },
+                { id: 8, name: '真的不会玩' },
+                { id: 9, name: '问心' },
+                { id: 10, name: '麦当劳不拉稀' },
+                { id: 11, name: '肉肉' },
+            ];
+
+            let currentMode = 'roundrobin';
+            let selectedPlayerIds = [];
+            let currentPlayers = [];
+            let roundSchedule = [];
+            let allMatches = [];
+            let doubleElimMatches = {};
+
+            const modePanel = document.getElementById('modePanel');
+            const playerGrid = document.getElementById('playerGrid');
+            const selectedCount = document.getElementById('selectedCount');
+            const startBtn = document.getElementById('startBtn');
+            const selectionPanel = document.getElementById('selectionPanel');
+            const selectionHint = document.getElementById('selectionHint');
+            const statsSummary = document.getElementById('statsSummary');
+            const rankingPanel = document.getElementById('rankingPanel');
+            const matchesSection = document.getElementById('matchesSection');
+            const bracketSection = document.getElementById('bracketSection');
+            const playerPositionsPanel = document.getElementById('playerPositionsPanel');
+            const bracketContainer = document.getElementById('bracketContainer');
+            const bracketGrid = document.getElementById('bracketGrid');
+            const bracketSvg = document.getElementById('bracketSvg');
+            const bracketTitle = document.getElementById('bracketTitle');
+            const btnRow = document.getElementById('btnRow');
+            const footerNote = document.getElementById('footerNote');
+            const subtitle = document.getElementById('subtitle');
+            const badgeRow = document.getElementById('badgeRow');
+            const rankTableBody = document.getElementById('rankTableBody');
+            const statCompleted = document.getElementById('statCompleted');
+            const statRemaining = document.getElementById('statRemaining');
+            const statTotalCrowns = document.getElementById('statTotalCrowns');
+            const toast = document.getElementById('toast');
+
+            let toastTimer = null;
+            let selectedPositions = [];
+            let currentPositionSlot = null;
+
+            function showToast(msg) {
+                if (toastTimer) clearTimeout(toastTimer);
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+
+            function openPlayerSelector(position) {
+                currentPositionSlot = position;
+                playerGrid.innerHTML = '';
+                
+                allPlayers.forEach(player => {
+                    const isSelected = selectedPositions.includes(player.id);
+                    const isCurrent = selectedPositions[position] === player.id;
+                    const chip = document.createElement('div');
+                    chip.className = 'player-chip' + (isSelected ? ' selected' : '') + (isCurrent ? ' current' : '');
+                    chip.dataset.playerId = player.id;
+                    chip.innerHTML = `<span class="check-icon">✓</span><span class="player-name">${player.name}</span>`;
+                    chip.addEventListener('click', () => selectPlayerForPosition(player.id));
+                    playerGrid.appendChild(chip);
+                });
+
+                const backBtn = document.createElement('div');
+                backBtn.className = 'back-btn';
+                backBtn.innerHTML = '← 返回位置选择';
+                backBtn.addEventListener('click', () => {
+                    initSelection();
+                });
+                playerGrid.appendChild(backBtn);
+            }
+
+            function selectPlayerForPosition(playerId) {
+                if (selectedPositions.includes(playerId)) {
+                    const prevPos = selectedPositions.indexOf(playerId);
+                    if (prevPos !== currentPositionSlot) {
+                        selectedPositions[prevPos] = null;
+                    }
+                }
+                selectedPositions[currentPositionSlot] = playerId;
+                initSelection();
+            }
+
+            function selectMode(mode) {
+                currentMode = mode;
+                document.querySelectorAll('.mode-chip').forEach(chip => {
+                    chip.classList.remove('selected');
+                    if (chip.dataset.mode === mode) {
+                        chip.classList.add('selected');
+                    }
+                });
+                initSelection(true);
+            }
+
+            function getModeConfig() {
+                switch (currentMode) {
+                    case 'roundrobin':
+                        return { minPlayers: 4, maxPlayers: 10, hint: '请选择 4-10 名选手参赛' };
+                    case 'double4':
+                        return { minPlayers: 4, maxPlayers: 4, hint: '请选择 4 名选手参赛' };
+                    case 'double8':
+                        return { minPlayers: 8, maxPlayers: 8, hint: '请选择 8 名选手参赛' };
+                    default:
+                        return { minPlayers: 4, maxPlayers: 10, hint: '请选择 4-10 名选手参赛' };
+                }
+            }
+
+            function initSelection(resetPositions = false) {
+                const config = getModeConfig();
+                selectionHint.textContent = config.hint;
+                playerGrid.innerHTML = '';
+                
+                if (currentMode === 'roundrobin') {
+                    allPlayers.forEach(player => {
+                        const chip = document.createElement('div');
+                        chip.className = 'player-chip';
+                        chip.dataset.playerId = player.id;
+                        chip.innerHTML = `<span class="check-icon">✓</span><span class="player-name">${player.name}</span>`;
+                        chip.addEventListener('click', () => togglePlayer(player.id));
+                        playerGrid.appendChild(chip);
+                    });
+                    selectedPlayerIds = [];
+                } else {
+                    const positionCount = currentMode === 'double4' ? 4 : 8;
+                    if (resetPositions || selectedPositions.length !== positionCount) {
+                        selectedPositions = new Array(positionCount).fill(null);
+                    }
+                    for (let i = 0; i < positionCount; i++) {
+                        const slot = document.createElement('div');
+                        slot.className = 'position-slot';
+                        slot.dataset.position = i;
+                        const playerId = selectedPositions[i];
+                        const playerName = playerId !== null ? allPlayers.find(p => p.id === playerId)?.name || '点击选择' : '点击选择';
+                        slot.innerHTML = `
+                            <div class="position-number">${i + 1}</div>
+                            <div class="position-player ${playerId !== null ? 'filled' : ''}" id="position-${i}">${playerName}</div>
+                        `;
+                        slot.addEventListener('click', () => openPlayerSelector(i));
+                        playerGrid.appendChild(slot);
+                    }
+                }
+                updateSelectionUI();
+            }
+
+            function togglePlayer(playerId) {
+                const config = getModeConfig();
+                const idx = selectedPlayerIds.indexOf(playerId);
+                if (idx >= 0) {
+                    selectedPlayerIds.splice(idx, 1);
+                } else {
+                    if (selectedPlayerIds.length >= config.maxPlayers) {
+                        showToast(`最多选择${config.maxPlayers}名选手`);
+                        return;
+                    }
+                    selectedPlayerIds.push(playerId);
+                }
+                updateSelectionUI();
+            }
+
+            function updateSelectionUI() {
+                const config = getModeConfig();
+                
+                if (currentMode === 'roundrobin') {
+                    selectedCount.textContent = selectedPlayerIds.length;
+
+                    document.querySelectorAll('.player-chip').forEach(chip => {
+                        const id = parseInt(chip.dataset.playerId);
+                        if (selectedPlayerIds.includes(id)) {
+                            chip.classList.add('selected');
+                        } else {
+                            chip.classList.remove('selected');
+                        }
+                    });
+
+                    if (selectedPlayerIds.length >= config.minPlayers && selectedPlayerIds.length <= config.maxPlayers) {
+                        startBtn.classList.remove('disabled');
+                        startBtn.classList.add('enabled');
+                    } else {
+                        startBtn.classList.remove('enabled');
+                        startBtn.classList.add('disabled');
+                    }
+                } else {
+                    const filledCount = selectedPositions.filter(p => p !== null).length;
+                    selectedCount.textContent = filledCount;
+
+                    if (filledCount === config.maxPlayers) {
+                        startBtn.classList.remove('disabled');
+                        startBtn.classList.add('enabled');
+                    } else {
+                        startBtn.classList.remove('enabled');
+                        startBtn.classList.add('disabled');
+                    }
+                }
+            }
+
+            function generateRoundRobinSchedule(playerCount) {
+                const schedule = [];
+                const isOdd = playerCount % 2 !== 0;
+                const actualPlayers = playerCount;
+                const totalPositions = isOdd ? playerCount + 1 : playerCount;
+                const players = [];
+                for (let i = 0; i < totalPositions; i++) {
+                    players.push(i);
+                }
+
+                const rounds = isOdd ? playerCount : playerCount - 1;
+                const matchesPerRound = totalPositions / 2;
+
+                for (let round = 0; round < rounds; round++) {
+                    const roundMatches = [];
+                    for (let match = 0; match < matchesPerRound; match++) {
+                        const playerA = players[match];
+                        const playerB = players[totalPositions - 1 - match];
+                        if (playerA < actualPlayers && playerB < actualPlayers) {
+                            roundMatches.push([playerA, playerB]);
+                        }
+                    }
+                    schedule.push({ round: round + 1, matches: roundMatches });
+
+                    const last = players.pop();
+                    players.splice(1, 0, last);
+                }
+
+                return schedule;
+            }
+
+            const double4Deps = {
+                1: { p1: 0, p2: 3, label: '胜者组第一轮' },
+                2: { p1: 1, p2: 2, label: '胜者组第一轮' },
+                3: { p1: { match: 1, type: 'winner' }, p2: { match: 2, type: 'winner' }, label: '胜者组决赛' },
+                4: { p1: { match: 1, type: 'loser' }, p2: { match: 2, type: 'loser' }, label: '败者组第一轮' },
+                5: { p1: { match: 4, type: 'winner' }, p2: { match: 3, type: 'loser' }, label: '败者组决赛' },
+                6: { p1: { match: 3, type: 'winner' }, p2: { match: 5, type: 'winner' }, label: '总决赛' },
+                7: { p1: { match: 6, type: 'loser' }, p2: { match: 6, type: 'winner' }, label: '总决赛加赛', conditional: true },
+            };
+
+            const double8Deps = {
+                1: { p1: 0, p2: 7, label: '胜者组第一轮' },
+                2: { p1: 1, p2: 6, label: '胜者组第一轮' },
+                3: { p1: 2, p2: 5, label: '胜者组第一轮' },
+                4: { p1: 3, p2: 4, label: '胜者组第一轮' },
+                5: { p1: { match: 1, type: 'winner' }, p2: { match: 2, type: 'winner' }, label: '胜者组第二轮' },
+                6: { p1: { match: 3, type: 'winner' }, p2: { match: 4, type: 'winner' }, label: '胜者组第二轮' },
+                7: { p1: { match: 1, type: 'loser' }, p2: { match: 2, type: 'loser' }, label: '败者组第一轮' },
+                8: { p1: { match: 3, type: 'loser' }, p2: { match: 4, type: 'loser' }, label: '败者组第一轮' },
+                9: { p1: { match: 7, type: 'winner' }, p2: { match: 6, type: 'loser' }, label: '败者组第二轮' },
+                10: { p1: { match: 8, type: 'winner' }, p2: { match: 5, type: 'loser' }, label: '败者组第二轮' },
+                11: { p1: { match: 5, type: 'winner' }, p2: { match: 6, type: 'winner' }, label: '胜者组决赛' },
+                12: { p1: { match: 9, type: 'winner' }, p2: { match: 10, type: 'winner' }, label: '败者组第三轮' },
+                13: { p1: { match: 12, type: 'winner' }, p2: { match: 11, type: 'loser' }, label: '败者组决赛' },
+                14: { p1: { match: 11, type: 'winner' }, p2: { match: 13, type: 'winner' }, label: '总决赛' },
+                15: { p1: { match: 14, type: 'loser' }, p2: { match: 14, type: 'winner' }, label: '总决赛加赛', conditional: true },
+            };
+
+            function initDoubleElimMatches() {
+                doubleElimMatches = {};
+                const deps = currentMode === 'double4' ? double4Deps : double8Deps;
+                const maxMatch = currentMode === 'double4' ? 7 : 15;
+
+                for (let i = 1; i <= maxMatch; i++) {
+                    const dep = deps[i];
+                    doubleElimMatches[i] = {
+                        id: i,
+                        player1: '',
+                        player2: '',
+                        score1: '',
+                        score2: '',
+                        winner: '',
+                        loser: '',
+                        status: dep.conditional ? 'hidden' : 'pending',
+                        label: dep.label,
+                        conditional: dep.conditional || false
+                    };
+                }
+                updateDoubleElimMatchPlayers();
+            }
+
+            function updateDoubleElimMatchPlayers() {
+                const deps = currentMode === 'double4' ? double4Deps : double8Deps;
+                const maxMatch = currentMode === 'double4' ? 7 : 15;
+                const finalMatchId = currentMode === 'double4' ? 6 : 14;
+                const rematchId = currentMode === 'double4' ? 7 : 15;
+
+                for (let i = 1; i <= maxMatch; i++) {
+                    const match = doubleElimMatches[i];
+                    const dep = deps[i];
+
+                    if (match.conditional) {
+                        const finalMatch = doubleElimMatches[finalMatchId];
+                        if (finalMatch.status === 'finished' && 
+                            finalMatch.winner !== finalMatch.player1) {
+                            match.status = 'pending';
+                        } else {
+                            match.status = 'hidden';
+                        }
+                    }
+
+                    if (typeof dep.p1 === 'number') {
+                        match.player1 = currentPlayers[dep.p1]?.name || '';
+                    } else {
+                        const sourceMatch = doubleElimMatches[dep.p1.match];
+                        match.player1 = sourceMatch[dep.p1.type] || '';
+                    }
+
+                    if (typeof dep.p2 === 'number') {
+                        match.player2 = currentPlayers[dep.p2]?.name || '';
+                    } else {
+                        const sourceMatch = doubleElimMatches[dep.p2.match];
+                        match.player2 = sourceMatch[dep.p2.type] || '';
+                    }
+
+                    if (match.status === 'finished' && 
+                        match.winner !== match.player1 && 
+                        match.winner !== match.player2) {
+                        match.winner = '';
+                        match.loser = '';
+                        match.status = match.conditional ? 'hidden' : 'pending';
+                        match.score1 = '';
+                        match.score2 = '';
+                    }
+                }
+            }
+
+            function startTournament() {
+                const config = getModeConfig();
+                
+                if (currentMode === 'roundrobin') {
+                    if (selectedPlayerIds.length < config.minPlayers || selectedPlayerIds.length > config.maxPlayers) {
+                        showToast(`请选择${config.minPlayers}-${config.maxPlayers}名选手`);
+                        return;
+                    }
+                    currentPlayers = selectedPlayerIds.map(id => ({
+                        id: allPlayers.findIndex(p => p.id === id),
+                        name: allPlayers.find(p => p.id === id).name
+                    }));
+                } else {
+                    const filledCount = selectedPositions.filter(p => p !== null).length;
+                    if (filledCount !== config.maxPlayers) {
+                        showToast(`请为所有${config.maxPlayers}个位置选择选手`);
+                        return;
+                    }
+                    currentPlayers = selectedPositions.map(id => ({
+                        id: allPlayers.findIndex(p => p.id === id),
+                        name: allPlayers.find(p => p.id === id).name
+                    }));
+                }
+
+                modePanel.style.display = 'none';
+                selectionPanel.style.display = 'none';
+                statsSummary.style.display = 'flex';
+                btnRow.style.display = 'flex';
+                footerNote.style.display = 'block';
+
+                if (currentMode === 'roundrobin') {
+                    rankingPanel.style.display = 'block';
+                    bracketSection.style.display = 'none';
+                    matchesSection.style.display = 'block';
+                    matchesSection.style.display = 'block';
+                    bracketSection.style.display = 'none';
+
+                    roundSchedule = generateRoundRobinSchedule(currentPlayers.length);
+                    allMatches = [];
+                    roundSchedule.forEach(round => {
+                        round.matches.forEach(m => {
+                            allMatches.push({
+                                playerA: m[0],
+                                playerB: m[1],
+                                scoreA: null,
+                                scoreB: null,
+                            });
+                        });
+                    });
+
+                    const totalMatches = allMatches.length;
+                    const rounds = roundSchedule.length;
+
+                    subtitle.textContent = `${currentPlayers.length}人循环积分赛 · 胜场积一分`;
+                    badgeRow.innerHTML = `
+                        <span class="badge"><span class="dot"></span>${currentPlayers.length}名选手</span>
+                        <span class="badge"><span class="dot"></span>${totalMatches}场对决</span>
+                        <span class="badge"><span class="dot"></span>前2晋级</span>
+                    `;
+
+                    buildRoundRobinHTML();
+                    updateRoundRobinUI();
+                    showToast(`🎉 ${currentPlayers.length}人单循环赛开始！共${rounds}轮${totalMatches}场`);
+                } else {
+                    matchesSection.style.display = 'none';
+                    bracketSection.style.display = 'block';
+                    rankingPanel.style.display = 'none';
+                    playerPositionsPanel.style.display = 'block';
+
+                    initDoubleElimMatches();
+                    buildDoubleElimHTML();
+                    buildPlayerPositionsUI();
+
+                    const matchCount = currentMode === 'double4' ? 6 : 14;
+                    const modeName = currentMode === 'double4' ? '4人' : '8人';
+
+                    subtitle.textContent = `${modeName}双败淘汰赛 · 胜者组+败者组`;
+                    badgeRow.innerHTML = `
+                        <span class="badge"><span class="dot"></span>${currentPlayers.length}名选手</span>
+                        <span class="badge"><span class="dot"></span>${matchCount}场对决</span>
+                        <span class="badge"><span class="dot"></span>淘汰制</span>
+                    `;
+
+                    updateDoubleElimUI();
+                    showToast(`🎉 ${modeName}双败淘汰赛开始！共${matchCount}场对决`);
+                }
+            }
+
+            function backToSelection() {
+                const hasData = currentMode === 'roundrobin' 
+                    ? allMatches.some((_, i) => {
+                        const ia = document.getElementById('inputA' + i);
+                        const ib = document.getElementById('inputB' + i);
+                        return (ia && ia.value.trim() !== '') || (ib && ib.value.trim() !== '');
+                    })
+                    : Object.values(doubleElimMatches).some(m => m.status === 'finished');
+
+                if (hasData && !confirm('确定要返回重新选择吗？当前数据将丢失。')) return;
+
+                modePanel.style.display = 'block';
+                selectionPanel.style.display = 'block';
+                statsSummary.style.display = 'none';
+                rankingPanel.style.display = 'none';
+                matchesSection.style.display = 'none';
+                bracketSection.style.display = 'none';
+                playerPositionsPanel.style.display = 'none';
+                btnRow.style.display = 'none';
+                footerNote.style.display = 'none';
+
+                subtitle.textContent = '请选择赛制和选手';
+                badgeRow.innerHTML = `
+                    <span class="badge"><span class="dot"></span>12名可选</span>
+                    <span class="badge"><span class="dot"></span>多赛制支持</span>
+                `;
+
+                initSelection();
+            }
+
+            // ========== Round Robin Functions ==========
+            function buildRoundRobinHTML() {
+                let html = '';
+                let globalMatchIdx = 0;
+
+                roundSchedule.forEach((round, roundIdx) => {
+                    html += `<div class="round-group">`;
+                    html += `<div class="round-header">
+                            <span class="round-num">第${round.round}轮</span>
+                            <span>${round.matches.length}场对决</span>
+                        </div>`;
+
+                    round.matches.forEach((m, matchIdx) => {
+                        const pA = currentPlayers[m[0]];
+                        const pB = currentPlayers[m[1]];
+                        html += `
+                        <div class="match-card match-pending" id="matchCard${globalMatchIdx}" data-match-index="${globalMatchIdx}">
+                            <span class="match-player" id="matchPlayerA${globalMatchIdx}">${pA.name}</span>
+                            <span class="match-result-dot" id="dotA${globalMatchIdx}"></span>
+                            <div class="match-input-wrap">
+                                <input type="number" class="match-input" id="inputA${globalMatchIdx}" 
+                                    min="0" step="1" inputmode="numeric" pattern="[0-9]*"
+                                    placeholder="0" aria-label="${pA.name} 皇冠数"
+                                    data-match="${globalMatchIdx}" data-player="A">
+                                <span class="match-vs">VS</span>
+                                <input type="number" class="match-input" id="inputB${globalMatchIdx}" 
+                                    min="0" step="1" inputmode="numeric" pattern="[0-9]*"
+                                    placeholder="0" aria-label="${pB.name} 皇冠数"
+                                    data-match="${globalMatchIdx}" data-player="B">
+                            </div>
+                            <span class="match-result-dot" id="dotB${globalMatchIdx}"></span>
+                            <span class="match-player" id="matchPlayerB${globalMatchIdx}">${pB.name}</span>
+                        </div>`;
+                        globalMatchIdx++;
+                    });
+                    html += `</div>`;
+                });
+                matchesSection.innerHTML = html;
+
+                document.querySelectorAll('.match-input').forEach(input => {
+                    input.addEventListener('input', handleInputChange);
+                    input.addEventListener('blur', handleInputBlur);
+                    input.addEventListener('keydown', (e) => {
+                        const key = e.key;
+                        if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'Tab' ||
+                            key === 'Backspace' || key === 'Delete' || key === 'Enter' ||
+                            key === 'Home' || key === 'End' || key === 'ArrowLeft' || key === 'ArrowRight') {
+                            return;
+                        }
+                        if (!/^[0-9]$/.test(key) && key !== 'Tab') {
+                            e.preventDefault();
+                        }
+                    });
+                });
+            }
+
+            function readAllScores() {
+                const scores = [];
+                for (let i = 0; i < allMatches.length; i++) {
+                    const inputA = document.getElementById('inputA' + i);
+                    const inputB = document.getElementById('inputB' + i);
+                    const valA = inputA ? inputA.value.trim() : '';
+                    const valB = inputB ? inputB.value.trim() : '';
+                    const scoreA = valA === '' ? null : parseInt(valA, 10);
+                    const scoreB = valB === '' ? null : parseInt(valB, 10);
+
+                    const isComplete = (scoreA !== null && !isNaN(scoreA) && scoreA >= 0) &&
+                        (scoreB !== null && !isNaN(scoreB) && scoreB >= 0);
+
+                    scores.push({
+                        matchIndex: i,
+                        playerA: allMatches[i].playerA,
+                        playerB: allMatches[i].playerB,
+                        scoreA: isComplete ? scoreA : null,
+                        scoreB: isComplete ? scoreB : null,
+                        isComplete: isComplete,
+                    });
+                }
+                return scores;
+            }
+
+            function calculateStats(scores) {
+                const stats = currentPlayers.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    wins: 0,
+                    totalCrownsFor: 0,
+                    totalCrownsAgainst: 0,
+                    netCrowns: 0,
+                    matchesPlayed: 0,
+                    matchesCompleted: 0,
+                }));
+
+                scores.forEach(s => {
+                    if (s.isComplete) {
+                        const statA = stats[s.playerA];
+                        const statB = stats[s.playerB];
+                        statA.totalCrownsFor += s.scoreA;
+                        statA.totalCrownsAgainst += s.scoreB;
+                        statA.matchesCompleted++;
+                        statA.matchesPlayed++;
+
+                        statB.totalCrownsFor += s.scoreB;
+                        statB.totalCrownsAgainst += s.scoreA;
+                        statB.matchesCompleted++;
+                        statB.matchesPlayed++;
+
+                        if (s.scoreA > s.scoreB) {
+                            statA.wins++;
+                        } else if (s.scoreB > s.scoreA) {
+                            statB.wins++;
+                        }
+                    }
+                });
+
+                stats.forEach(s => {
+                    s.netCrowns = s.totalCrownsFor - s.totalCrownsAgainst;
+                });
+
+                stats.sort((a, b) => {
+                    if (b.wins !== a.wins) return b.wins - a.wins;
+                    return b.netCrowns - a.netCrowns;
+                });
+
+                for (let i = 0; i < stats.length; i++) {
+                    if (i === 0) {
+                        stats[i].rank = 1;
+                    } else {
+                        if (stats[i].wins === stats[i - 1].wins && stats[i].netCrowns === stats[i - 1].netCrowns) {
+                            stats[i].rank = stats[i - 1].rank;
+                        } else {
+                            stats[i].rank = i + 1;
+                        }
+                    }
+                }
+
+                return stats;
+            }
+
+            function updateRoundRobinUI() {
+                const scores = readAllScores();
+                const stats = calculateStats(scores);
+
+                const completedCount = scores.filter(s => s.isComplete).length;
+                const totalCrowns = scores.reduce((sum, s) => {
+                    if (s.isComplete) return sum + s.scoreA + s.scoreB;
+                    return sum;
+                }, 0);
+                statCompleted.textContent = completedCount;
+                statRemaining.textContent = allMatches.length - completedCount;
+                statTotalCrowns.textContent = totalCrowns;
+
+                renderRankTable(stats);
+
+                for (let i = 0; i < allMatches.length; i++) {
+                    const card = document.getElementById('matchCard' + i);
+                    const inputA = document.getElementById('inputA' + i);
+                    const inputB = document.getElementById('inputB' + i);
+                    const dotA = document.getElementById('dotA' + i);
+                    const dotB = document.getElementById('dotB' + i);
+                    const playerAEl = document.getElementById('matchPlayerA' + i);
+                    const playerBEl = document.getElementById('matchPlayerB' + i);
+
+                    if (!card || !inputA || !inputB) continue;
+
+                    const s = scores[i];
+                    if (s.isComplete) {
+                        card.classList.add('match-completed');
+                        card.classList.remove('match-pending');
+
+                        if (s.scoreA > s.scoreB) {
+                            inputA.classList.add('filled');
+                            inputA.classList.remove('filled-loser');
+                            inputB.classList.add('filled-loser');
+                            inputB.classList.remove('filled');
+                            if (dotA) { dotA.className = 'match-result-dot dot-win'; dotA.style.display = 'block'; }
+                            if (dotB) { dotB.className = 'match-result-dot dot-lose'; dotB.style.display = 'block'; }
+                            if (playerAEl) playerAEl.classList.add('winner-highlight');
+                            if (playerBEl) playerBEl.classList.remove('winner-highlight');
+                        } else if (s.scoreB > s.scoreA) {
+                            inputB.classList.add('filled');
+                            inputB.classList.remove('filled-loser');
+                            inputA.classList.add('filled-loser');
+                            inputA.classList.remove('filled');
+                            if (dotA) { dotA.className = 'match-result-dot dot-lose'; dotA.style.display = 'block'; }
+                            if (dotB) { dotB.className = 'match-result-dot dot-win'; dotB.style.display = 'block'; }
+                            if (playerBEl) playerBEl.classList.add('winner-highlight');
+                            if (playerAEl) playerAEl.classList.remove('winner-highlight');
+                        } else {
+                            inputA.classList.add('filled');
+                            inputB.classList.add('filled');
+                            inputA.classList.remove('filled-loser');
+                            inputB.classList.remove('filled-loser');
+                            if (dotA) { dotA.className = 'match-result-dot dot-draw'; dotA.style.display = 'block'; }
+                            if (dotB) { dotB.className = 'match-result-dot dot-draw'; dotB.style.display = 'block'; }
+                            if (playerAEl) playerAEl.classList.remove('winner-highlight');
+                            if (playerBEl) playerBEl.classList.remove('winner-highlight');
+                        }
+                    } else {
+                        card.classList.remove('match-completed');
+                        card.classList.add('match-pending');
+                        inputA.classList.remove('filled', 'filled-loser');
+                        inputB.classList.remove('filled', 'filled-loser');
+                        if (dotA) { dotA.className = 'match-result-dot'; dotA.style.display = 'none'; }
+                        if (dotB) { dotB.className = 'match-result-dot'; dotB.style.display = 'none'; }
+                        if (playerAEl) playerAEl.classList.remove('winner-highlight');
+                        if (playerBEl) playerBEl.classList.remove('winner-highlight');
+                    }
+                }
+
+                if (completedCount === allMatches.length && allMatches.length > 0) {
+                    const top2 = stats.filter(s => s.rank <= 2);
+                    const top2Names = top2.map(s => s.name).join(' 和 ');
+                    showToast('🎉 全部比赛结束！晋级选手：' + top2Names);
+                }
+            }
+
+            function renderRankTable(stats) {
+                let rankHTML = '';
+                stats.forEach((s, idx) => {
+                    const rankClass = s.rank === 1 ? 'rank-1' : (s.rank === 2 ? 'rank-2' : '');
+                    const isQualified = s.rank <= 2;
+                    const netClass = s.netCrowns > 0 ? 'net-crown-positive' : (s.netCrowns < 0 ?
+                        'net-crown-negative' : 'net-crown-zero');
+                    const netSign = s.netCrowns > 0 ? '+' : '';
+                    rankHTML += `
+                        <tr class="${rankClass}">
+                            <td>
+                                <span class="rank-badge">${s.rank === 1 ? '👑' : (s.rank === 2 ? '🥈' : s.rank)}</span>
+                            </td>
+                            <td>
+                                ${s.name}
+                                ${isQualified ? '<span class="qualified-badge">晋级</span>' : ''}
+                            </td>
+                            <td><strong>${s.wins}</strong></td>
+                            <td class="${netClass}">${netSign}${s.netCrowns}</td>
+                            <td>${s.totalCrownsFor}</td>
+                            <td>${s.totalCrownsAgainst}</td>
+                        </tr>`;
+                });
+                rankTableBody.innerHTML = rankHTML;
+            }
+
+            function handleInputChange(e) {
+                const input = e.target;
+                const matchIdx = parseInt(input.dataset.match);
+                const player = input.dataset.player;
+                const otherInput = document.getElementById(
+                    (player === 'A' ? 'inputB' : 'inputA') + matchIdx
+                );
+
+                let val = input.value.replace(/[^0-9]/g, '');
+                if (val !== input.value) {
+                    input.value = val;
+                }
+                if (val.length > 1 && val.startsWith('0')) {
+                    val = String(parseInt(val, 10));
+                    input.value = val;
+                }
+
+                updateRoundRobinUI();
+
+                if (input.value.trim() !== '' && otherInput && otherInput.value.trim() !== '') {
+                    const nextMatchIdx = matchIdx + 1;
+                    if (nextMatchIdx < allMatches.length) {
+                        const nextInputA = document.getElementById('inputA' + nextMatchIdx);
+                        if (nextInputA && nextInputA.value.trim() === '') {
+                            setTimeout(() => {
+                                nextInputA.focus();
+                            }, 300);
+                        }
+                    }
+                }
+            }
+
+            function handleInputBlur(e) {
+                const input = e.target;
+                let val = input.value.trim();
+                if (val === '') {
+                } else {
+                    let num = parseInt(val, 10);
+                    if (isNaN(num) || num < 0) {
+                        input.value = '';
+                    } else {
+                        input.value = num;
+                    }
+                }
+                updateRoundRobinUI();
+            }
+
+            // ========== Double Elimination Functions ==========
+            function buildPlayerPositionsUI() {
+                const data = buildBracketData();
+                renderBracket(data);
+            }
+
+            function buildBracketData() {
+                const matches = [];
+                const modeName = currentMode === 'double4' ? '4人' : '8人';
+                
+                if (currentMode === 'double8') {
+                    const depMap = {
+                        1: 'match_1', 2: 'match_2', 3: 'match_3', 4: 'match_4',
+                        5: 'w_match_1', 6: 'w_match_2', 7: 'l_match_1', 8: 'l_match_2',
+                        9: 'l_match_3', 10: 'l_match_4', 11: 'w_match_3', 12: 'l_match_5',
+                        13: 'l_match_6', 14: 'final_match', 15: 'rematch'
+                    };
+                    
+                    for (let i = 1; i <= 14; i++) {
+                        const match = doubleElimMatches[i];
+                        const dep = double8Deps[i];
+                        matches.push({
+                            id: depMap[i],
+                            playerA: match.player1 ? { flag: '🇨🇳', name: match.player1 } : null,
+                            playerB: match.player2 ? { flag: '🇨🇳', name: match.player2 } : null,
+                            winnerId: match.winner === match.player1 ? 'A' : match.winner === match.player2 ? 'B' : null,
+                            scoreA: match.score1,
+                            scoreB: match.score2,
+                            zone: dep.label.includes('胜者组') ? 'winner' : dep.label.includes('败者组') ? 'loser' : 'final',
+                            label: dep.label
+                        });
+                    }
+                } else {
+                    const depMap = {
+                        1: 'match_1', 2: 'match_2', 3: 'w_match_1', 4: 'l_match_1',
+                        5: 'l_match_2', 6: 'final_match', 7: 'rematch'
+                    };
+                    
+                    for (let i = 1; i <= 6; i++) {
+                        const match = doubleElimMatches[i];
+                        const dep = double4Deps[i];
+                        matches.push({
+                            id: depMap[i],
+                            playerA: match.player1 ? { flag: '🇨🇳', name: match.player1 } : null,
+                            playerB: match.player2 ? { flag: '🇨🇳', name: match.player2 } : null,
+                            winnerId: match.winner === match.player1 ? 'A' : match.winner === match.player2 ? 'B' : null,
+                            scoreA: match.score1,
+                            scoreB: match.score2,
+                            zone: dep.label.includes('胜者组') ? 'winner' : dep.label.includes('败者组') ? 'loser' : 'final',
+                            label: dep.label
+                        });
+                    }
+                }
+                
+                return {
+                    title: `${modeName}双败淘汰赛`,
+                    matches: matches,
+                    mode: currentMode
+                };
+            }
+
+            function renderBracket(data) {
+                bracketTitle.textContent = data.title;
+                
+                if (data.mode === 'double8') {
+                    render8PlayerBracket(data);
+                } else {
+                    render4PlayerBracket(data);
+                }
+                
+                setTimeout(() => {
+                    drawBracketLines(data.mode);
+                }, 50);
+            }
+
+            function render8PlayerBracket(data) {
+                bracketGrid.className = 'bracket-grid bracket-grid-8';
+                
+                const positions = {
+                    'match_1': { col: 1, row: 1 },
+                    'match_2': { col: 1, row: 2 },
+                    'match_3': { col: 1, row: 3 },
+                    'match_4': { col: 1, row: 4 },
+                    'w_match_1': { col: 2, row: 1, zone: 'winner' },
+                    'w_match_2': { col: 2, row: 2, zone: 'winner' },
+                    'l_match_1': { col: 2, row: 3, zone: 'loser' },
+                    'l_match_2': { col: 2, row: 4, zone: 'loser' },
+                    'w_match_3': { col: 3, row: 1, zone: 'winner' },
+                    'l_match_3': { col: 3, row: 3, zone: 'loser' },
+                    'l_match_4': { col: 3, row: 4, zone: 'loser' },
+                    'l_match_5': { col: 4, row: 3, zone: 'loser' },
+                    'final_match': { col: 5, row: 2, zone: 'final' }
+                };
+
+                let html = '';
+                
+                Object.keys(positions).forEach(id => {
+                    const pos = positions[id];
+                    const matchData = data.matches.find(m => m.id === id);
+                    if (!matchData) return;
+                    
+                    html += `<div class="bracket-cell" data-id="${id}" data-col="${pos.col}" data-row="${pos.row}">
+                        ${renderMatchCard(matchData)}
+                    </div>`;
+                });
+                
+                bracketGrid.innerHTML = html;
+            }
+
+            function render4PlayerBracket(data) {
+                bracketGrid.className = 'bracket-grid bracket-grid-4';
+                
+                const positions = {
+                    'match_1': { col: 1, row: 1 },
+                    'match_2': { col: 1, row: 2 },
+                    'w_match_1': { col: 2, row: 1, zone: 'winner' },
+                    'l_match_1': { col: 2, row: 2, zone: 'loser' },
+                    'l_match_2': { col: 3, row: 2, zone: 'loser' },
+                    'final_match': { col: 4, row: 1, zone: 'final' }
+                };
+
+                let html = '';
+                
+                Object.keys(positions).forEach(id => {
+                    const pos = positions[id];
+                    const matchData = data.matches.find(m => m.id === id);
+                    if (!matchData) return;
+                    
+                    html += `<div class="bracket-cell" data-id="${id}" data-col="${pos.col}" data-row="${pos.row}">
+                        ${renderMatchCard(matchData)}
+                    </div>`;
+                });
+                
+                bracketGrid.innerHTML = html;
+            }
+
+            function renderMatchCard(match) {
+                const zone = match.zone;
+                const isFinished = match.winnerId !== null;
+                const winnerIsA = match.winnerId === 'A';
+                
+                const playerAClass = isFinished && winnerIsA ? 'winner' : '';
+                const playerBClass = isFinished && !winnerIsA ? 'winner' : '';
+                
+                const scoreDisplay = (match.scoreA || match.scoreB) ? 
+                    `<div class="match-score">${match.scoreA || '-'} - ${match.scoreB || '-'}</div>` : '';
+                
+                const playerA = match.playerA ? 
+                    `<div class="player-card ${playerAClass} ${zone}">
+                        <span class="player-flag">${match.playerA.flag}</span>
+                        <span class="player-name">${match.playerA.name}</span>
+                    </div>` : 
+                    `<div class="player-card empty ${zone}">待定</div>`;
+                
+                const playerB = match.playerB ? 
+                    `<div class="player-card ${playerBClass} ${zone}">
+                        <span class="player-flag">${match.playerB.flag}</span>
+                        <span class="player-name">${match.playerB.name}</span>
+                    </div>` : 
+                    `<div class="player-card empty ${zone}">待定</div>`;
+                
+                let statusLabel = '';
+                if (match.id === 'final_match') {
+                    statusLabel = isFinished ? '<div class="status-label champion">👑 冠军选手</div>' : '<div class="status-label">总决赛</div>';
+                } else if (match.zone === 'winner') {
+                    statusLabel = '<div class="status-label winner">胜者组晋级</div>';
+                } else if (match.zone === 'loser') {
+                    statusLabel = '<div class="status-label loser">败者组晋级</div>';
+                }
+                
+                return `
+                    <div class="match-node ${zone}">
+                        <div class="match-label">${match.label}</div>
+                        ${playerA}
+                        <div class="vs-label">VS</div>
+                        ${playerB}
+                        ${scoreDisplay}
+                        ${statusLabel}
+                    </div>
+                `;
+            }
+
+            function drawBracketLines(mode) {
+                const container = bracketContainer;
+                const svg = bracketSvg;
+                const containerRect = container.getBoundingClientRect();
+                
+                svg.setAttribute('width', containerRect.width);
+                svg.setAttribute('height', containerRect.height);
+                
+                svg.innerHTML = '';
+                
+                const getNodeCenter = (id) => {
+                    const cell = document.querySelector(`.bracket-cell[data-id="${id}"]`);
+                    if (!cell) return null;
+                    const rect = cell.getBoundingClientRect();
+                    return {
+                        x: rect.left - containerRect.left + rect.width / 2,
+                        y: rect.top - containerRect.top + rect.height / 2
+                    };
+                };
+                
+                const drawLine = (fromId, toId, isCross = false) => {
+                    const from = getNodeCenter(fromId);
+                    const to = getNodeCenter(toId);
+                    if (!from || !to) return;
+                    
+                    const cell = document.querySelector(`.bracket-cell[data-id="${fromId}"]`);
+                    const match = cell?.querySelector('.match-node');
+                    const rect = match?.getBoundingClientRect();
+                    const fromX = rect ? rect.left - containerRect.left + rect.width : from.x;
+                    
+                    const toCell = document.querySelector(`.bracket-cell[data-id="${toId}"]`);
+                    const toMatch = toCell?.querySelector('.match-node');
+                    const toRect = toMatch?.getBoundingClientRect();
+                    const toX = toRect ? toRect.left - containerRect.left : to.x;
+                    
+                    const midX = (fromX + toX) / 2;
+                    
+                    let path = '';
+                    if (isCross) {
+                        path = `M ${fromX} ${from.y} L ${midX} ${from.y} L ${midX} ${to.y} L ${toX} ${to.y}`;
+                    } else {
+                        path = `M ${fromX} ${from.y} L ${midX} ${from.y} L ${midX} ${to.y} L ${toX} ${to.y}`;
+                    }
+                    
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    line.setAttribute('d', path);
+                    line.setAttribute('stroke', '#60a5fa');
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('fill', 'none');
+                    line.setAttribute('stroke-linecap', 'round');
+                    line.setAttribute('stroke-linejoin', 'round');
+                    svg.appendChild(line);
+                    
+                    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                    const arrowSize = 6;
+                    const angle = Math.atan2(to.y - midX, toX - midX);
+                    const arrowPoints = `${toX},${to.y} ${toX - arrowSize * Math.cos(angle - Math.PI / 6)},${to.y - arrowSize * Math.sin(angle - Math.PI / 6)} ${toX - arrowSize * Math.cos(angle + Math.PI / 6)},${to.y - arrowSize * Math.sin(angle + Math.PI / 6)}`;
+                    arrow.setAttribute('points', arrowPoints);
+                    arrow.setAttribute('fill', '#60a5fa');
+                    svg.appendChild(arrow);
+                };
+                
+                if (mode === 'double8') {
+                    drawLine('match_1', 'w_match_1');
+                    drawLine('match_2', 'w_match_1');
+                    drawLine('match_3', 'w_match_2');
+                    drawLine('match_4', 'w_match_2');
+                    drawLine('match_1', 'l_match_1');
+                    drawLine('match_2', 'l_match_1');
+                    drawLine('match_3', 'l_match_2');
+                    drawLine('match_4', 'l_match_2');
+                    drawLine('w_match_1', 'w_match_3');
+                    drawLine('w_match_2', 'w_match_3');
+                    drawLine('l_match_1', 'l_match_3');
+                    drawLine('w_match_2', 'l_match_3', true);
+                    drawLine('l_match_2', 'l_match_4');
+                    drawLine('w_match_1', 'l_match_4', true);
+                    drawLine('l_match_3', 'l_match_5');
+                    drawLine('l_match_4', 'l_match_5');
+                    drawLine('w_match_3', 'final_match');
+                    drawLine('l_match_5', 'final_match');
+                } else {
+                    drawLine('match_1', 'w_match_1');
+                    drawLine('match_2', 'w_match_1');
+                    drawLine('match_1', 'l_match_1');
+                    drawLine('match_2', 'l_match_1');
+                    drawLine('w_match_1', 'final_match');
+                    drawLine('l_match_1', 'l_match_2');
+                    drawLine('l_match_2', 'final_match');
+                }
+            }
+
+            function buildDoubleElimHTML() {
+                const deps = currentMode === 'double4' ? double4Deps : double8Deps;
+                const maxMatch = currentMode === 'double4' ? 7 : 15;
+
+                const allMatches = [];
+                for (let i = 1; i <= maxMatch; i++) {
+                    const match = doubleElimMatches[i];
+                    if (match.status !== 'hidden') {
+                        allMatches.push({ id: i, match: match, label: deps[i].label });
+                    }
+                }
+
+                const column1Matches = [];
+                const column2Matches = [];
+
+                allMatches.forEach((m, idx) => {
+                    if (idx % 2 === 0) {
+                        column1Matches.push(m);
+                    } else {
+                        column2Matches.push(m);
+                    }
+                });
+
+                let html = '';
+
+                html += `<div class="bracket-column">`;
+                column1Matches.forEach(m => {
+                    html += buildBracketMatchCard(m.id);
+                });
+                html += `</div>`;
+
+                html += `<div class="bracket-column">`;
+                column2Matches.forEach(m => {
+                    html += buildBracketMatchCard(m.id);
+                });
+                html += `</div>`;
+
+                bracketSection.innerHTML = html;
+
+                document.querySelectorAll('.bracket-win-btn').forEach(btn => {
+                    btn.addEventListener('click', handleDoubleElimWin);
+                });
+                document.querySelectorAll('.bracket-score-input').forEach(input => {
+                    input.addEventListener('input', handleBracketScoreChange);
+                });
+            }
+
+            function buildBracketMatchCard(matchId) {
+                const match = doubleElimMatches[matchId];
+                const maxMatch = currentMode === 'double4' ? 7 : 15;
+                
+                const isFinal = matchId === (currentMode === 'double4' ? 6 : 14);
+                const isRematch = matchId === (currentMode === 'double4' ? 7 : 15);
+                
+                const rankTag = isFinal 
+                    ? '<div class="rank-tag">胜者组冠军 vs 败者组冠军</div>'
+                    : isRematch
+                    ? '<div class="rank-tag">🏆 胜者：总冠军 | 败者：亚军</div>'
+                    : matchId === (currentMode === 'double4' ? 5 : 13)
+                    ? '<div class="rank-tag">败者：季军</div>'
+                    : matchId === (currentMode === 'double4' ? 4 : 12)
+                    ? '<div class="rank-tag">败者：殿军</div>'
+                    : '';
+
+                return `
+                    <div class="bracket-match-card ${match.status === 'finished' ? 'completed' : ''} ${isRematch ? 'rematch' : ''}" data-match="${matchId}">
+                        <div class="bracket-match-header">
+                            <span class="bracket-match-num">比赛${matchId}</span>
+                            <span class="bracket-match-label">${match.label}</span>
+                        </div>
+                        <div class="bracket-player ${match.status === 'finished' && match.winner === match.player1 ? 'winner' : ''}">
+                            <input type="text" readonly value="${match.player1 || ''}" placeholder="待定" class="bracket-player-name">
+                            <div class="bracket-score-wrapper">
+                                <input type="number" min="0" max="20" 
+                                    class="bracket-score-input" 
+                                    data-match="${matchId}" data-side="left"
+                                    value="${match.score1 || ''}" 
+                                    placeholder="-"
+                                    ${match.status === 'finished' ? 'readonly' : ''}>
+                            </div>
+                            ${match.status === 'finished' && match.winner === match.player1 ? 
+                                '<span class="bracket-player-status winner-text">胜</span>' : ''}
+                        </div>
+                        <div class="bracket-vs">VS</div>
+                        <div class="bracket-player ${match.status === 'finished' && match.winner === match.player2 ? 'winner' : ''}">
+                            <input type="text" readonly value="${match.player2 || ''}" placeholder="待定" class="bracket-player-name">
+                            <div class="bracket-score-wrapper">
+                                <input type="number" min="0" max="20" 
+                                    class="bracket-score-input" 
+                                    data-match="${matchId}" data-side="right"
+                                    value="${match.score2 || ''}" 
+                                    placeholder="-"
+                                    ${match.status === 'finished' ? 'readonly' : ''}>
+                            </div>
+                            ${match.status === 'finished' && match.winner === match.player2 ? 
+                                '<span class="bracket-player-status winner-text">胜</span>' : ''}
+                        </div>
+                        ${match.status === 'pending' && match.player1 && match.player2 ? `
+                            <div class="bracket-result-btns">
+                                <button class="btn btn-success bracket-win-btn" data-match="${matchId}" data-player="1">上方胜</button>
+                                <button class="btn btn-warning bracket-win-btn" data-match="${matchId}" data-player="2">下方胜</button>
+                            </div>
+                        ` : ''}
+                        ${rankTag}
+                    </div>`;
+            }
+
+            function handleDoubleElimWin(e) {
+                const btn = e.target;
+                const matchId = parseInt(btn.dataset.match);
+                const winPlayer = btn.dataset.player;
+                const match = doubleElimMatches[matchId];
+
+                if (!match.player1 || !match.player2) {
+                    showToast('该场比赛的选手还未确定！');
+                    return;
+                }
+
+                match.winner = winPlayer === '1' ? match.player1 : match.player2;
+                match.loser = winPlayer === '1' ? match.player2 : match.player1;
+                match.status = 'finished';
+
+                updateDoubleElimMatchPlayers();
+                updateDoubleElimUI();
+
+                showToast(`✅ 比赛${matchId}结果已记录`);
+            }
+
+            function handleBracketScoreChange(e) {
+                const input = e.target;
+                const matchId = parseInt(input.dataset.match);
+                const side = input.dataset.side;
+                doubleElimMatches[matchId][side === 'left' ? 'score1' : 'score2'] = input.value;
+                updateDoubleElimUI();
+            }
+
+            function updateDoubleElimUI() {
+                const maxMatch = currentMode === 'double4' ? 7 : 15;
+                let completedCount = 0;
+                let totalCrowns = 0;
+                let remainingCount = 0;
+
+                for (let i = 1; i <= maxMatch; i++) {
+                    const match = doubleElimMatches[i];
+                    if (match.status === 'finished') {
+                        completedCount++;
+                    } else if (match.status === 'pending') {
+                        remainingCount++;
+                    }
+                }
+
+                statCompleted.textContent = completedCount;
+                statRemaining.textContent = remainingCount;
+                statTotalCrowns.textContent = totalCrowns;
+
+                buildDoubleElimHTML();
+                buildPlayerPositionsUI();
+            }
+
+            function calculateDoubleElimStats() {
+                const stats = currentPlayers.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    wins: 0,
+                    losses: 0,
+                    totalCrownsFor: 0,
+                    totalCrownsAgainst: 0,
+                    netCrowns: 0,
+                    rank: null
+                }));
+
+                const maxMatch = currentMode === 'double4' ? 7 : 15;
+                const finalMatchId = currentMode === 'double4' ? 6 : 14;
+                const rematchId = currentMode === 'double4' ? 7 : 15;
+
+                for (let i = 1; i <= maxMatch; i++) {
+                    const match = doubleElimMatches[i];
+                    if (match.status === 'finished') {
+                        const winnerIdx = stats.findIndex(s => s.name === match.winner);
+                        const loserIdx = stats.findIndex(s => s.name === match.loser);
+                        if (winnerIdx >= 0) stats[winnerIdx].wins++;
+                        if (loserIdx >= 0) stats[loserIdx].losses++;
+                    }
+                }
+
+                const rankings = {};
+                const rematch = doubleElimMatches[rematchId];
+                const finalMatch = doubleElimMatches[finalMatchId];
+                
+                if (rematch.status === 'finished') {
+                    rankings[rematch.winner] = 1;
+                    rankings[rematch.loser] = 2;
+                } else if (finalMatch.status === 'finished') {
+                    rankings[finalMatch.winner] = 1;
+                    rankings[finalMatch.loser] = 2;
+                }
+
+                const thirdMatch = doubleElimMatches[finalMatchId - 1];
+                if (thirdMatch.status === 'finished') {
+                    rankings[thirdMatch.loser] = 3;
+                }
+
+                const fourthMatch = doubleElimMatches[finalMatchId - 2];
+                if (fourthMatch && fourthMatch.status === 'finished') {
+                    rankings[fourthMatch.loser] = 4;
+                }
+
+                stats.forEach(s => {
+                    s.rank = rankings[s.name] || stats.length;
+                });
+
+                stats.sort((a, b) => {
+                    if (a.rank && b.rank) return a.rank - b.rank;
+                    if (a.rank) return -1;
+                    if (b.rank) return 1;
+                    return b.wins - a.wins;
+                });
+
+                renderRankTable(stats);
+            }
+
+            // ========== Common Functions ==========
+            function resetAllScores() {
+                if (currentMode === 'roundrobin') {
+                    if (allMatches.some((_, i) => {
+                        const ia = document.getElementById('inputA' + i);
+                        const ib = document.getElementById('inputB' + i);
+                        return (ia && ia.value.trim() !== '') || (ib && ib.value.trim() !== '');
+                    })) {
+                        if (!confirm('确定要清空所有比分吗？')) return;
+                    }
+                    for (let i = 0; i < allMatches.length; i++) {
+                        const inputA = document.getElementById('inputA' + i);
+                        const inputB = document.getElementById('inputB' + i);
+                        if (inputA) inputA.value = '';
+                        if (inputB) inputB.value = '';
+                    }
+                    updateRoundRobinUI();
+                } else {
+                    if (Object.values(doubleElimMatches).some(m => m.status === 'finished')) {
+                        if (!confirm('确定要清空所有比分吗？')) return;
+                    }
+                    initDoubleElimMatches();
+                    buildDoubleElimHTML();
+                    updateDoubleElimUI();
+                }
+                showToast('✅ 所有比分已清空');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function fillDemoData() {
+                if (currentMode === 'roundrobin') {
+                    const scores = readAllScores();
+                    const hasData = scores.some(s => s.isComplete);
+                    if (hasData && !confirm('当前已有比分数据，填入演示数据将覆盖它们。确定继续吗？')) return;
+
+                    for (let i = 0; i < allMatches.length; i++) {
+                        const inputA = document.getElementById('inputA' + i);
+                        const inputB = document.getElementById('inputB' + i);
+                        if (inputA && inputB) {
+                            inputA.value = Math.floor(Math.random() * 3) + 1;
+                            inputB.value = Math.floor(Math.random() * 3) + 1;
+                        }
+                    }
+                    updateRoundRobinUI();
+                } else {
+                    const hasData = Object.values(doubleElimMatches).some(m => m.status === 'finished');
+                    if (hasData && !confirm('当前已有比分数据，填入演示数据将覆盖它们。确定继续吗？')) return;
+
+                    const maxMatch = currentMode === 'double4' ? 6 : 14;
+                    for (let i = 1; i <= maxMatch; i++) {
+                        const match = doubleElimMatches[i];
+                        if (match.player1 && match.player2) {
+                            match.winner = Math.random() > 0.5 ? match.player1 : match.player2;
+                            match.loser = match.winner === match.player1 ? match.player2 : match.player1;
+                            match.status = 'finished';
+                        }
+                    }
+                    updateDoubleElimMatchPlayers();
+                    updateDoubleElimUI();
+                }
+                showToast('📊 演示数据已填入！');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            window.selectMode = selectMode;
+            window.startTournament = startTournament;
+            window.backToSelection = backToSelection;
+            window.resetAllScores = resetAllScores;
+            window.fillDemoData = fillDemoData;
+
+            initSelection();
+        })();
+    </script>
+</body>
+</html>
