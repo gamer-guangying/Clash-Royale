@@ -322,6 +322,53 @@
             background: rgba(59, 130, 246, 0.1);
             border-color: var(--blue);
         }
+        .player-grid-grouped {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .group-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .group-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 8px;
+            background: var(--surface-light);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid;
+        }
+        .group-section:first-child .group-title {
+            border-color: var(--blue);
+            color: var(--blue-light);
+        }
+        .group-section:last-child .group-title {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+        .group-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .position-slot.group-a {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .position-slot.group-a:hover {
+            border-color: var(--blue);
+            background: rgba(59, 130, 246, 0.08);
+        }
+        .position-slot.group-b {
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+        .position-slot.group-b:hover {
+            border-color: var(--orange);
+            background: rgba(249, 115, 22, 0.08);
+        }
         .selection-footer {
             display: flex;
             justify-content: space-between;
@@ -805,6 +852,208 @@
             border-radius: 4px;
         }
 
+        /* ========== Group 12 Section ========== */
+        .group12-section {
+            margin-top: 14px;
+        }
+        .group-stages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .group-panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 14px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+        }
+        .group-a-panel {
+            border-top: 3px solid var(--blue);
+        }
+        .group-b-panel {
+            border-top: 3px solid var(--orange);
+        }
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .group-label {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        .group-a-panel .group-label {
+            color: var(--blue-light);
+        }
+        .group-b-panel .group-label {
+            color: var(--orange);
+        }
+        .group-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .group-matches {
+            margin-bottom: 14px;
+        }
+        .group-ranking {
+            background: var(--surface-light);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+        }
+        .group-ranking-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .group-ranking-table {
+            width: 100%;
+            font-size: 0.8125rem;
+        }
+        .group-ranking-table th {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 4px 0;
+            font-size: 0.75rem;
+        }
+        .group-ranking-table td {
+            padding: 4px 0;
+        }
+        .group-ranking-table .rank-num {
+            font-weight: 700;
+            width: 24px;
+        }
+        .group-ranking-table .rank-num.top4 {
+            color: var(--gold);
+        }
+        .knockout-stage {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 14px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 14px;
+        }
+        .knockout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .knockout-label {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+        .knockout-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .knockout-bracket {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .knockout-round {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .knockout-round-title {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .knockout-matches {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .knockout-match {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-light);
+            border-radius: var(--radius-sm);
+            padding: 8px;
+        }
+        .knockout-player {
+            flex: 1;
+            text-align: center;
+            font-weight: 500;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        .knockout-player.winner {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--green);
+            font-weight: 700;
+        }
+        .knockout-player.from-a {
+            color: var(--blue-light);
+        }
+        .knockout-player.from-b {
+            color: var(--orange);
+        }
+        .knockout-score {
+            width: 40px;
+            text-align: center;
+        }
+        .knockout-score input {
+            width: 100%;
+            text-align: center;
+            padding: 4px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.875rem;
+            background: var(--surface);
+            color: var(--text);
+        }
+        .knockout-arrow {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .enter-knockout-btn {
+            width: 100%;
+            margin-top: 8px;
+        }
+        .btn-success {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+        .btn-success:hover {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.75rem;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+        .btn-outline:hover {
+            border-color: var(--blue);
+            color: var(--blue-light);
+            background: rgba(59, 130, 246, 0.08);
+        }
+        .refresh-ko-btn {
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
         /* ========== Player Positions Panel ========== */
         .player-positions-panel {
             background: var(--surface);
@@ -1161,6 +1410,11 @@
                     <span class="mode-name">8人双败</span>
                     <span class="mode-desc">固定8人</span>
                 </div>
+                <div class="mode-chip" data-mode="group12" onclick="selectMode('group12')">
+                    <span class="mode-icon">🎯</span>
+                    <span class="mode-name">十二人两组</span>
+                    <span class="mode-desc">A/B组各6人</span>
+                </div>
             </div>
         </div>
 
@@ -1237,6 +1491,41 @@
         <div class="bracket-section" id="bracketSection" style="display: none;">
         </div>
 
+        <!-- 十二人两组赛区域 -->
+        <div class="group12-section" id="group12Section" style="display: none;">
+            <div class="group-stages">
+                <div class="group-panel group-a-panel">
+                    <div class="group-header">
+                        <span class="group-label">A组</span>
+                        <span class="group-sub">单循环积分赛</span>
+                    </div>
+                    <div class="group-matches" id="groupAMatches"></div>
+                    <div class="group-ranking" id="groupARanking"></div>
+                </div>
+                <div class="group-panel group-b-panel">
+                    <div class="group-header">
+                        <span class="group-label">B组</span>
+                        <span class="group-sub">单循环积分赛</span>
+                    </div>
+                    <div class="group-matches" id="groupBMatches"></div>
+                    <div class="group-ranking" id="groupBRanking"></div>
+                </div>
+            </div>
+            <div class="knockout-stage" id="knockoutStage" style="display: none;">
+                <div class="knockout-header">
+                    <span class="knockout-label">淘汰赛</span>
+                    <span class="knockout-sub">8强单淘汰</span>
+                    <button class="btn btn-sm btn-outline refresh-ko-btn" onclick="refreshKnockout()">
+                        <span class="btn-icon">🔄</span> 刷新淘汰赛
+                    </button>
+                </div>
+                <div class="knockout-bracket" id="knockoutBracket"></div>
+            </div>
+            <button class="btn btn-success enter-knockout-btn" id="enterKnockoutBtn" onclick="enterKnockout()" style="display: none;">
+                <span class="btn-icon">🎯</span> 进入淘汰赛
+            </button>
+        </div>
+
         <!-- 按钮 -->
         <div class="btn-row" id="btnRow" style="display: none;">
             <button class="btn btn-primary" onclick="resetAllScores()" title="清空所有比分">
@@ -1309,6 +1598,12 @@
             let toastTimer = null;
             let selectedPositions = [];
             let currentPositionSlot = null;
+            let currentPhase = 'group';
+            let groupAPlayers = [];
+            let groupBPlayers = [];
+            let groupARounds = [];
+            let groupBRounds = [];
+            let knockoutMatches = [];
 
             function showToast(msg) {
                 if (toastTimer) clearTimeout(toastTimer);
@@ -1373,6 +1668,8 @@
                         return { minPlayers: 4, maxPlayers: 4, hint: '请选择 4 名选手参赛' };
                     case 'double8':
                         return { minPlayers: 8, maxPlayers: 8, hint: '请选择 8 名选手参赛' };
+                    case 'group12':
+                        return { minPlayers: 12, maxPlayers: 12, hint: '请选择 12 名选手参赛（A组6人+B组6人）' };
                     default:
                         return { minPlayers: 4, maxPlayers: 10, hint: '请选择 4-10 名选手参赛' };
                 }
@@ -1393,8 +1690,54 @@
                         playerGrid.appendChild(chip);
                     });
                     selectedPlayerIds = [];
+                } else if (currentMode === 'group12') {
+                    const positionCount = 12;
+                    if (resetPositions || selectedPositions.length !== positionCount) {
+                        selectedPositions = new Array(positionCount).fill(null);
+                    }
+                    
+                    playerGrid.className = 'player-grid-grouped';
+                    
+                    const groupA = document.createElement('div');
+                    groupA.className = 'group-section';
+                    groupA.innerHTML = '<div class="group-title">A组</div><div class="group-slots" id="groupA-slots"></div>';
+                    playerGrid.appendChild(groupA);
+                    
+                    const groupB = document.createElement('div');
+                    groupB.className = 'group-section';
+                    groupB.innerHTML = '<div class="group-title">B组</div><div class="group-slots" id="groupB-slots"></div>';
+                    playerGrid.appendChild(groupB);
+                    
+                    for (let i = 0; i < 6; i++) {
+                        const slot = document.createElement('div');
+                        slot.className = 'position-slot group-a';
+                        slot.dataset.position = i;
+                        const playerId = selectedPositions[i];
+                        const playerName = playerId !== null ? allPlayers.find(p => p.id === playerId)?.name || '点击选择' : '点击选择';
+                        slot.innerHTML = `
+                            <div class="position-number">${i + 1}</div>
+                            <div class="position-player ${playerId !== null ? 'filled' : ''}" id="position-${i}">${playerName}</div>
+                        `;
+                        slot.addEventListener('click', () => openPlayerSelector(i));
+                        document.getElementById('groupA-slots').appendChild(slot);
+                    }
+                    
+                    for (let i = 6; i < 12; i++) {
+                        const slot = document.createElement('div');
+                        slot.className = 'position-slot group-b';
+                        slot.dataset.position = i;
+                        const playerId = selectedPositions[i];
+                        const playerName = playerId !== null ? allPlayers.find(p => p.id === playerId)?.name || '点击选择' : '点击选择';
+                        slot.innerHTML = `
+                            <div class="position-number">${i - 5}</div>
+                            <div class="position-player ${playerId !== null ? 'filled' : ''}" id="position-${i}">${playerName}</div>
+                        `;
+                        slot.addEventListener('click', () => openPlayerSelector(i));
+                        document.getElementById('groupB-slots').appendChild(slot);
+                    }
                 } else {
                     const positionCount = currentMode === 'double4' ? 4 : 8;
+                    playerGrid.className = '';
                     if (resetPositions || selectedPositions.length !== positionCount) {
                         selectedPositions = new Array(positionCount).fill(null);
                     }
@@ -1657,6 +2000,32 @@
                     buildRoundRobinHTML();
                     updateRoundRobinUI();
                     showToast(`🎉 ${currentPlayers.length}人单循环赛开始！共${rounds}轮${totalMatches}场`);
+                } else if (currentMode === 'group12') {
+                    matchesSection.style.display = 'none';
+                    bracketSection.style.display = 'none';
+                    rankingPanel.style.display = 'none';
+                    playerPositionsPanel.style.display = 'none';
+
+                    groupAPlayers = selectedPositions.slice(0, 6).map(id => ({
+                        id: allPlayers.findIndex(p => p.id === id),
+                        name: allPlayers.find(p => p.id === id).name
+                    }));
+                    groupBPlayers = selectedPositions.slice(6, 12).map(id => ({
+                        id: allPlayers.findIndex(p => p.id === id),
+                        name: allPlayers.find(p => p.id === id).name
+                    }));
+
+                    initGroupMatches();
+
+                    subtitle.textContent = '十二人两组赛 · A/B组小组赛';
+                    badgeRow.innerHTML = `
+                        <span class="badge"><span class="dot">A</span>A组6人</span>
+                        <span class="badge"><span class="dot">B</span>B组6人</span>
+                        <span class="badge"><span class="dot"></span>共30场小组赛</span>
+                    `;
+
+                    buildGroupStageHTML();
+                    showToast(`🎉 十二人两组赛开始！A组6人+B组6人，共30场小组赛`);
                 } else {
                     matchesSection.style.display = 'none';
                     bracketSection.style.display = 'block';
@@ -1683,13 +2052,20 @@
             }
 
             function backToSelection() {
-                const hasData = currentMode === 'roundrobin' 
-                    ? allMatches.some((_, i) => {
+                let hasData = false;
+                if (currentMode === 'roundrobin') {
+                    hasData = allMatches.some((_, i) => {
                         const ia = document.getElementById('inputA' + i);
                         const ib = document.getElementById('inputB' + i);
                         return (ia && ia.value.trim() !== '') || (ib && ib.value.trim() !== '');
-                    })
-                    : Object.values(doubleElimMatches).some(m => m.status === 'finished');
+                    });
+                } else if (currentMode === 'group12') {
+                    const allAMatches = groupARounds.flatMap(r => r.matches);
+                    const allBMatches = groupBRounds.flatMap(r => r.matches);
+                    hasData = allAMatches.some(m => m.scoreA !== null) || allBMatches.some(m => m.scoreA !== null);
+                } else {
+                    hasData = Object.values(doubleElimMatches).some(m => m.status === 'finished');
+                }
 
                 if (hasData && !confirm('确定要返回重新选择吗？当前数据将丢失。')) return;
 
@@ -1700,6 +2076,7 @@
                 matchesSection.style.display = 'none';
                 bracketSection.style.display = 'none';
                 playerPositionsPanel.style.display = 'none';
+                document.getElementById('group12Section').style.display = 'none';
                 btnRow.style.display = 'none';
                 footerNote.style.display = 'none';
 
@@ -1709,6 +2086,7 @@
                     <span class="badge"><span class="dot"></span>多赛制支持</span>
                 `;
 
+                currentPhase = 'group';
                 initSelection();
             }
 
@@ -2514,6 +2892,38 @@
                         if (inputB) inputB.value = '';
                     }
                     updateRoundRobinUI();
+                } else if (currentMode === 'group12') {
+                    const allAMatches = groupARounds.flatMap(r => r.matches);
+                    const allBMatches = groupBRounds.flatMap(r => r.matches);
+                    const hasData = allAMatches.some(m => m.scoreA !== null) || allBMatches.some(m => m.scoreA !== null);
+                    if (hasData && !confirm('确定要清空所有比分吗？')) return;
+                    
+                    groupARounds.forEach(round => {
+                        round.matches.forEach(match => {
+                            match.scoreA = null;
+                            match.scoreB = null;
+                            const inputA = document.getElementById('gA-scoreA-' + match.globalIdx);
+                            const inputB = document.getElementById('gA-scoreB-' + match.globalIdx);
+                            if (inputA) inputA.value = '';
+                            if (inputB) inputB.value = '';
+                        });
+                    });
+                    groupBRounds.forEach(round => {
+                        round.matches.forEach(match => {
+                            match.scoreA = null;
+                            match.scoreB = null;
+                            const inputA = document.getElementById('gB-scoreA-' + match.globalIdx);
+                            const inputB = document.getElementById('gB-scoreB-' + match.globalIdx);
+                            if (inputA) inputA.value = '';
+                            if (inputB) inputB.value = '';
+                        });
+                    });
+                    
+                    knockoutMatches = [];
+                    document.getElementById('knockoutStage').style.display = 'none';
+                    document.getElementById('enterKnockoutBtn').style.display = 'none';
+                    currentPhase = 'group';
+                    updateGroupUI();
                 } else {
                     if (Object.values(doubleElimMatches).some(m => m.status === 'finished')) {
                         if (!confirm('确定要清空所有比分吗？')) return;
@@ -2524,6 +2934,584 @@
                 }
                 showToast('✅ 所有比分已清空');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function initGroupMatches() {
+                groupARounds = [];
+                groupBRounds = [];
+                
+                const roundScheduleA = generateRoundRobinSchedule(6);
+                let globalIdxA = 0;
+                roundScheduleA.forEach(round => {
+                    const roundMatches = [];
+                    round.matches.forEach(m => {
+                        roundMatches.push({
+                            playerA: m[0],
+                            playerB: m[1],
+                            scoreA: null,
+                            scoreB: null,
+                            globalIdx: globalIdxA++,
+                        });
+                    });
+                    groupARounds.push({ round: round.round, matches: roundMatches });
+                });
+                
+                const roundScheduleB = generateRoundRobinSchedule(6);
+                let globalIdxB = 0;
+                roundScheduleB.forEach(round => {
+                    const roundMatches = [];
+                    round.matches.forEach(m => {
+                        roundMatches.push({
+                            playerA: m[0],
+                            playerB: m[1],
+                            scoreA: null,
+                            scoreB: null,
+                            globalIdx: globalIdxB++,
+                        });
+                    });
+                    groupBRounds.push({ round: round.round, matches: roundMatches });
+                });
+            }
+
+            function buildGroupStageHTML() {
+                const group12Section = document.getElementById('group12Section');
+                group12Section.style.display = 'block';
+                
+                const groupAMatchesEl = document.getElementById('groupAMatches');
+                const groupBMatchesEl = document.getElementById('groupBMatches');
+                
+                groupAMatchesEl.innerHTML = '';
+                groupBMatchesEl.innerHTML = '';
+                
+                let htmlA = '';
+                groupARounds.forEach((round) => {
+                    htmlA += `<div class="round-group">`;
+                    htmlA += `<div class="round-header">
+                            <span class="round-num">第${round.round}轮</span>
+                            <span>${round.matches.length}场对决</span>
+                        </div>`;
+                    
+                    round.matches.forEach((match) => {
+                        const pA = groupAPlayers[match.playerA];
+                        const pB = groupAPlayers[match.playerB];
+                        htmlA += `
+                        <div class="match-card match-pending" id="gA-match-${match.globalIdx}" data-match="${match.globalIdx}" data-group="A">
+                            <span class="match-player" id="gA-playerA-${match.globalIdx}">${pA.name}</span>
+                            <span class="match-result-dot" id="gA-dotA-${match.globalIdx}"></span>
+                            <div class="match-input-wrap">
+                                <input type="number" class="match-input" id="gA-scoreA-${match.globalIdx}" 
+                                    min="0" step="1" inputmode="numeric" pattern="[0-9]*"
+                                    placeholder="0" aria-label="${pA.name} 皇冠数"
+                                    data-match="${match.globalIdx}" data-group="A" data-side="A">
+                                <span class="match-vs">VS</span>
+                                <input type="number" class="match-input" id="gA-scoreB-${match.globalIdx}" 
+                                    min="0" step="1" inputmode="numeric" pattern="[0-9]*"
+                                    placeholder="0" aria-label="${pB.name} 皇冠数"
+                                    data-match="${match.globalIdx}" data-group="A" data-side="B">
+                            </div>
+                            <span class="match-result-dot" id="gA-dotB-${match.globalIdx}"></span>
+                            <span class="match-player" id="gA-playerB-${match.globalIdx}">${pB.name}</span>
+                        </div>`;
+                    });
+                    htmlA += `</div>`;
+                });
+                groupAMatchesEl.innerHTML = htmlA;
+                
+                let htmlB = '';
+                groupBRounds.forEach((round) => {
+                    htmlB += `<div class="round-group">`;
+                    htmlB += `<div class="round-header">
+                            <span class="round-num">第${round.round}轮</span>
+                            <span>${round.matches.length}场对决</span>
+                        </div>`;
+                    
+                    round.matches.forEach((match) => {
+                        const pA = groupBPlayers[match.playerA];
+                        const pB = groupBPlayers[match.playerB];
+                        htmlB += `
+                        <div class="match-card match-pending" id="gB-match-${match.globalIdx}" data-match="${match.globalIdx}" data-group="B">
+                            <span class="match-player" id="gB-playerA-${match.globalIdx}">${pA.name}</span>
+                            <span class="match-result-dot" id="gB-dotA-${match.globalIdx}"></span>
+                            <div class="match-input-wrap">
+                                <input type="number" class="match-input" id="gB-scoreA-${match.globalIdx}" 
+                                    min="0" step="1" inputmode="numeric" pattern="[0-9]*"
+                                    placeholder="0" aria-label="${pA.name} 皇冠数"
+                                    data-match="${match.globalIdx}" data-group="B" data-side="A">
+                                <span class="match-vs">VS</span>
+                                <input type="number" class="match-input" id="gB-scoreB-${match.globalIdx}" 
+                                    min="0" step="1" inputmode="numeric" pattern="[0-9]*"
+                                    placeholder="0" aria-label="${pB.name} 皇冠数"
+                                    data-match="${match.globalIdx}" data-group="B" data-side="B">
+                            </div>
+                            <span class="match-result-dot" id="gB-dotB-${match.globalIdx}"></span>
+                            <span class="match-player" id="gB-playerB-${match.globalIdx}">${pB.name}</span>
+                        </div>`;
+                    });
+                    htmlB += `</div>`;
+                });
+                groupBMatchesEl.innerHTML = htmlB;
+                
+                document.querySelectorAll('.match-input').forEach(input => {
+                    input.addEventListener('input', handleGroupInputChange);
+                    input.addEventListener('blur', handleGroupInputBlur);
+                });
+                
+                updateGroupRanking();
+            }
+
+            function handleGroupInputChange(e) {
+                const input = e.target;
+                const matchIdx = parseInt(input.dataset.match);
+                const group = input.dataset.group;
+                const player = input.dataset.side;
+                
+                let val = input.value.replace(/[^0-9]/g, '');
+                if (val !== input.value) {
+                    input.value = val;
+                }
+                if (val.length > 1 && val.startsWith('0')) {
+                    val = String(parseInt(val, 10));
+                    input.value = val;
+                }
+                
+                updateGroupUI();
+                
+                if (input.value.trim() !== '') {
+                    const otherInput = document.getElementById(
+                        `g${group}-score${player === 'A' ? 'B' : 'A'}-${matchIdx}`
+                    );
+                    if (otherInput && otherInput.value.trim() !== '') {
+                        const nextMatchEl = input.closest('.round-group').nextElementSibling;
+                        if (nextMatchEl) {
+                            const nextInput = nextMatchEl.querySelector('.match-input');
+                            if (nextInput && nextInput.value.trim() === '') {
+                                nextInput.focus();
+                            }
+                        }
+                    }
+                }
+            }
+
+            function handleGroupInputBlur(e) {
+                const input = e.target;
+                const val = input.value;
+                if (val === '') {
+                    input.value = '';
+                } else {
+                    input.value = String(parseInt(val, 10));
+                }
+                updateGroupUI();
+            }
+
+            function updateGroupUI() {
+                updateGroupRanking();
+                
+                groupARounds.forEach(round => {
+                    round.matches.forEach(match => {
+                        const card = document.getElementById(`gA-match-${match.globalIdx}`);
+                        const inputA = document.getElementById(`gA-scoreA-${match.globalIdx}`);
+                        const inputB = document.getElementById(`gA-scoreB-${match.globalIdx}`);
+                        const dotA = document.getElementById(`gA-dotA-${match.globalIdx}`);
+                        const dotB = document.getElementById(`gA-dotB-${match.globalIdx}`);
+                        
+                        if (!card || !inputA || !inputB) return;
+                        
+                        const scoreA = inputA.value.trim() !== '' ? parseInt(inputA.value, 10) : null;
+                        const scoreB = inputB.value.trim() !== '' ? parseInt(inputB.value, 10) : null;
+                        
+                        match.scoreA = scoreA;
+                        match.scoreB = scoreB;
+                        
+                        if (scoreA !== null && scoreB !== null) {
+                            card.classList.add('match-completed');
+                            card.classList.remove('match-pending');
+                            
+                            if (scoreA > scoreB) {
+                                dotA.className = 'match-result-dot match-winner';
+                                dotB.className = 'match-result-dot';
+                            } else if (scoreB > scoreA) {
+                                dotB.className = 'match-result-dot match-winner';
+                                dotA.className = 'match-result-dot';
+                            } else {
+                                dotA.className = 'match-result-dot match-draw';
+                                dotB.className = 'match-result-dot match-draw';
+                            }
+                        } else {
+                            card.classList.remove('match-completed');
+                            card.classList.add('match-pending');
+                            dotA.className = 'match-result-dot';
+                            dotB.className = 'match-result-dot';
+                        }
+                    });
+                });
+                
+                groupBRounds.forEach(round => {
+                    round.matches.forEach(match => {
+                        const card = document.getElementById(`gB-match-${match.globalIdx}`);
+                        const inputA = document.getElementById(`gB-scoreA-${match.globalIdx}`);
+                        const inputB = document.getElementById(`gB-scoreB-${match.globalIdx}`);
+                        const dotA = document.getElementById(`gB-dotA-${match.globalIdx}`);
+                        const dotB = document.getElementById(`gB-dotB-${match.globalIdx}`);
+                        
+                        if (!card || !inputA || !inputB) return;
+                        
+                        const scoreA = inputA.value.trim() !== '' ? parseInt(inputA.value, 10) : null;
+                        const scoreB = inputB.value.trim() !== '' ? parseInt(inputB.value, 10) : null;
+                        
+                        match.scoreA = scoreA;
+                        match.scoreB = scoreB;
+                        
+                        if (scoreA !== null && scoreB !== null) {
+                            card.classList.add('match-completed');
+                            card.classList.remove('match-pending');
+                            
+                            if (scoreA > scoreB) {
+                                dotA.className = 'match-result-dot match-winner';
+                                dotB.className = 'match-result-dot';
+                            } else if (scoreB > scoreA) {
+                                dotB.className = 'match-result-dot match-winner';
+                                dotA.className = 'match-result-dot';
+                            } else {
+                                dotA.className = 'match-result-dot match-draw';
+                                dotB.className = 'match-result-dot match-draw';
+                            }
+                        } else {
+                            card.classList.remove('match-completed');
+                            card.classList.add('match-pending');
+                            dotA.className = 'match-result-dot';
+                            dotB.className = 'match-result-dot';
+                        }
+                    });
+                });
+            }
+
+            function getGroupStandings(players, matches) {
+                const standings = players.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    wins: 0,
+                    draws: 0,
+                    losses: 0,
+                    crownsFor: 0,
+                    crownsAgainst: 0,
+                    netCrowns: 0,
+                }));
+                
+                matches.forEach(match => {
+                    if (match.scoreA !== null && match.scoreB !== null) {
+                        const pA = standings[match.playerA];
+                        const pB = standings[match.playerB];
+                        
+                        pA.crownsFor += match.scoreA;
+                        pA.crownsAgainst += match.scoreB;
+                        pB.crownsFor += match.scoreB;
+                        pB.crownsAgainst += match.scoreA;
+                        
+                        if (match.scoreA > match.scoreB) {
+                            pA.wins++;
+                            pB.losses++;
+                        } else if (match.scoreB > match.scoreA) {
+                            pB.wins++;
+                            pA.losses++;
+                        } else {
+                            pA.draws++;
+                            pB.draws++;
+                        }
+                    }
+                });
+                
+                standings.forEach(s => {
+                    s.netCrowns = s.crownsFor - s.crownsAgainst;
+                });
+                
+                standings.sort((a, b) => {
+                    if (b.wins !== a.wins) return b.wins - a.wins;
+                    return b.netCrowns - a.netCrowns;
+                });
+                
+                return standings;
+            }
+
+            function updateGroupRanking() {
+                const groupARanking = document.getElementById('groupARanking');
+                const groupBRanking = document.getElementById('groupBRanking');
+                
+                const allAMatches = groupARounds.flatMap(r => r.matches);
+                const allBMatches = groupBRounds.flatMap(r => r.matches);
+                
+                const standingsA = getGroupStandings(groupAPlayers, allAMatches);
+                const standingsB = getGroupStandings(groupBPlayers, allBMatches);
+                
+                let htmlA = `<div class="group-ranking-title">A组排名</div><table class="group-ranking-table"><thead><tr><th>排名</th><th>选手</th><th>胜</th><th>净胜分</th></tr></thead><tbody>`;
+                standingsA.forEach((s, idx) => {
+                    htmlA += `<tr><td class="rank-num ${idx < 4 ? 'top4' : ''}">${idx + 1}</td><td>${s.name}</td><td>${s.wins}</td><td>${s.netCrowns}</td></tr>`;
+                });
+                htmlA += `</tbody></table>`;
+                groupARanking.innerHTML = htmlA;
+                
+                let htmlB = `<div class="group-ranking-title">B组排名</div><table class="group-ranking-table"><thead><tr><th>排名</th><th>选手</th><th>胜</th><th>净胜分</th></tr></thead><tbody>`;
+                standingsB.forEach((s, idx) => {
+                    htmlB += `<tr><td class="rank-num ${idx < 4 ? 'top4' : ''}">${idx + 1}</td><td>${s.name}</td><td>${s.wins}</td><td>${s.netCrowns}</td></tr>`;
+                });
+                htmlB += `</tbody></table>`;
+                groupBRanking.innerHTML = htmlB;
+                
+                const allAMatchesComplete = allAMatches.every(m => m.scoreA !== null && m.scoreB !== null);
+                const allBMatchesComplete = allBMatches.every(m => m.scoreA !== null && m.scoreB !== null);
+                const enterKnockoutBtn = document.getElementById('enterKnockoutBtn');
+                
+                if (allAMatchesComplete && allBMatchesComplete) {
+                    enterKnockoutBtn.style.display = 'block';
+                } else {
+                    enterKnockoutBtn.style.display = 'none';
+                }
+            }
+
+            function refreshKnockout() {
+                const allAMatches = groupARounds.flatMap(r => r.matches);
+                const allBMatches = groupBRounds.flatMap(r => r.matches);
+                const standingsA = getGroupStandings(groupAPlayers, allAMatches);
+                const standingsB = getGroupStandings(groupBPlayers, allBMatches);
+
+                const knockoutPlayers = [
+                    { ...standingsA[0], group: 'A', rank: 1 },
+                    { ...standingsB[3], group: 'B', rank: 4 },
+                    { ...standingsA[1], group: 'A', rank: 2 },
+                    { ...standingsB[2], group: 'B', rank: 3 },
+                    { ...standingsA[2], group: 'A', rank: 3 },
+                    { ...standingsB[1], group: 'B', rank: 2 },
+                    { ...standingsA[3], group: 'A', rank: 4 },
+                    { ...standingsB[0], group: 'B', rank: 1 },
+                ];
+
+                knockoutMatches = [
+                    { id: 1, playerA: 0, playerB: 1, scoreA: null, scoreB: null, winner: null },
+                    { id: 2, playerA: 2, playerB: 3, scoreA: null, scoreB: null, winner: null },
+                    { id: 3, playerA: 4, playerB: 5, scoreA: null, scoreB: null, winner: null },
+                    { id: 4, playerA: 6, playerB: 7, scoreA: null, scoreB: null, winner: null },
+                    { id: 5, playerA: null, playerB: null, scoreA: null, scoreB: null, winner: null, dependsOn: [1, 2] },
+                    { id: 6, playerA: null, playerB: null, scoreA: null, scoreB: null, winner: null, dependsOn: [3, 4] },
+                    { id: 7, playerA: null, playerB: null, scoreA: null, scoreB: null, winner: null, dependsOn: [5, 6] },
+                ];
+
+                buildKnockoutHTML(knockoutPlayers);
+                showToast('🔄 淘汰赛已根据最新小组排名刷新');
+            }
+
+            function enterKnockout() {
+                currentPhase = 'knockout';
+                
+                const allAMatches = groupARounds.flatMap(r => r.matches);
+                const allBMatches = groupBRounds.flatMap(r => r.matches);
+                const standingsA = getGroupStandings(groupAPlayers, allAMatches);
+                const standingsB = getGroupStandings(groupBPlayers, allBMatches);
+                
+                const knockoutPlayers = [
+                    { ...standingsA[0], group: 'A', rank: 1 },
+                    { ...standingsB[3], group: 'B', rank: 4 },
+                    { ...standingsA[1], group: 'A', rank: 2 },
+                    { ...standingsB[2], group: 'B', rank: 3 },
+                    { ...standingsA[2], group: 'A', rank: 3 },
+                    { ...standingsB[1], group: 'B', rank: 2 },
+                    { ...standingsA[3], group: 'A', rank: 4 },
+                    { ...standingsB[0], group: 'B', rank: 1 },
+                ];
+                
+                knockoutMatches = [
+                    { id: 1, playerA: 0, playerB: 1, scoreA: null, scoreB: null, winner: null },
+                    { id: 2, playerA: 2, playerB: 3, scoreA: null, scoreB: null, winner: null },
+                    { id: 3, playerA: 4, playerB: 5, scoreA: null, scoreB: null, winner: null },
+                    { id: 4, playerA: 6, playerB: 7, scoreA: null, scoreB: null, winner: null },
+                    { id: 5, playerA: null, playerB: null, scoreA: null, scoreB: null, winner: null, dependsOn: [1, 2] },
+                    { id: 6, playerA: null, playerB: null, scoreA: null, scoreB: null, winner: null, dependsOn: [3, 4] },
+                    { id: 7, playerA: null, playerB: null, scoreA: null, scoreB: null, winner: null, dependsOn: [5, 6] },
+                ];
+                
+                buildKnockoutHTML(knockoutPlayers);
+                
+                subtitle.textContent = '十二人两组赛 · 淘汰赛';
+                badgeRow.innerHTML = `
+                    <span class="badge"><span class="dot">🏆</span>淘汰赛阶段</span>
+                    <span class="badge"><span class="dot"></span>8名选手</span>
+                    <span class="badge"><span class="dot"></span>单淘汰制</span>
+                `;
+                
+                showToast('🎯 进入淘汰赛！8强对决开始');
+            }
+
+            function buildKnockoutHTML(players) {
+                const knockoutStage = document.getElementById('knockoutStage');
+                knockoutStage.style.display = 'block';
+                const enterKnockoutBtn = document.getElementById('enterKnockoutBtn');
+                enterKnockoutBtn.style.display = 'none';
+                
+                const knockoutBracket = document.getElementById('knockoutBracket');
+                knockoutBracket.innerHTML = '';
+                
+                const round1Matches = knockoutMatches.slice(0, 4);
+                const round2Matches = knockoutMatches.slice(4, 6);
+                const finalMatch = knockoutMatches[6];
+                
+                let html = '<div class="knockout-round"><div class="knockout-round-title">四分之一决赛</div><div class="knockout-matches">';
+                round1Matches.forEach((match, idx) => {
+                    const pA = players[match.playerA];
+                    const pB = players[match.playerB];
+                    html += `
+                        <div class="knockout-match">
+                            <span class="knockout-player ${pA.group === 'A' ? 'from-a' : 'from-b'}" id="ko-pA-${match.id}">${pA.name}</span>
+                            <div class="knockout-score">
+                                <input type="text" id="ko-scoreA-${match.id}" data-match="${match.id}" data-side="A" oninput="updateKnockoutScore(this)" />
+                            </div>
+                            <span class="dash">-</span>
+                            <div class="knockout-score">
+                                <input type="text" id="ko-scoreB-${match.id}" data-match="${match.id}" data-side="B" oninput="updateKnockoutScore(this)" />
+                            </div>
+                            <span class="knockout-player ${pB.group === 'A' ? 'from-a' : 'from-b'}" id="ko-pB-${match.id}">${pB.name}</span>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+                
+                html += '<div class="knockout-round"><div class="knockout-round-title">半决赛</div><div class="knockout-matches">';
+                round2Matches.forEach((match, idx) => {
+                    html += `
+                        <div class="knockout-match">
+                            <span class="knockout-player" id="ko-pA-${match.id}">待定</span>
+                            <div class="knockout-score">
+                                <input type="text" id="ko-scoreA-${match.id}" data-match="${match.id}" data-side="A" oninput="updateKnockoutScore(this)" />
+                            </div>
+                            <span class="dash">-</span>
+                            <div class="knockout-score">
+                                <input type="text" id="ko-scoreB-${match.id}" data-match="${match.id}" data-side="B" oninput="updateKnockoutScore(this)" />
+                            </div>
+                            <span class="knockout-player" id="ko-pB-${match.id}">待定</span>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+                
+                html += '<div class="knockout-round"><div class="knockout-round-title">决赛</div><div class="knockout-matches">';
+                html += `
+                    <div class="knockout-match">
+                        <span class="knockout-player" id="ko-pA-${finalMatch.id}">待定</span>
+                        <div class="knockout-score">
+                            <input type="text" id="ko-scoreA-${finalMatch.id}" data-match="${finalMatch.id}" data-side="A" oninput="updateKnockoutScore(this)" />
+                        </div>
+                        <span class="dash">-</span>
+                        <div class="knockout-score">
+                            <input type="text" id="ko-scoreB-${finalMatch.id}" data-match="${finalMatch.id}" data-side="B" oninput="updateKnockoutScore(this)" />
+                        </div>
+                        <span class="knockout-player" id="ko-pB-${finalMatch.id}">待定</span>
+                    </div>
+                `;
+                html += '</div></div>';
+                
+                knockoutBracket.innerHTML = html;
+            }
+
+            function updateKnockoutScore(input) {
+                const matchId = parseInt(input.dataset.match);
+                const side = input.dataset.side;
+                
+                let val = input.value.replace(/[^0-9]/g, '');
+                if (val !== input.value) {
+                    input.value = val;
+                }
+                if (val.length > 1 && val.startsWith('0')) {
+                    val = String(parseInt(val, 10));
+                    input.value = val;
+                }
+                
+                const score = val === '' ? null : parseInt(val, 10);
+                const match = knockoutMatches.find(m => m.id === matchId);
+                if (!match) return;
+                
+                if (side === 'A') match.scoreA = score;
+                else match.scoreB = score;
+                
+                if (match.scoreA !== null && match.scoreB !== null) {
+                    match.winner = match.scoreA > match.scoreB ? match.playerA : match.playerB;
+                    updateKnockoutAdvancement();
+                }
+                
+                updateKnockoutWinners();
+            }
+
+            function updateKnockoutAdvancement() {
+                const allAMatches = groupARounds.flatMap(r => r.matches);
+                const allBMatches = groupBRounds.flatMap(r => r.matches);
+                const standingsA = getGroupStandings(groupAPlayers, allAMatches);
+                const standingsB = getGroupStandings(groupBPlayers, allBMatches);
+                
+                const knockoutPlayers = [
+                    { ...standingsA[0], group: 'A', rank: 1 },
+                    { ...standingsB[3], group: 'B', rank: 4 },
+                    { ...standingsA[1], group: 'A', rank: 2 },
+                    { ...standingsB[2], group: 'B', rank: 3 },
+                    { ...standingsA[2], group: 'A', rank: 3 },
+                    { ...standingsB[1], group: 'B', rank: 2 },
+                    { ...standingsA[3], group: 'A', rank: 4 },
+                    { ...standingsB[0], group: 'B', rank: 1 },
+                ];
+                
+                const match1Winner = knockoutMatches[0].winner;
+                const match2Winner = knockoutMatches[1].winner;
+                const match3Winner = knockoutMatches[2].winner;
+                const match4Winner = knockoutMatches[3].winner;
+                
+                if (match1Winner !== null && match2Winner !== null) {
+                    knockoutMatches[4].playerA = match1Winner;
+                    knockoutMatches[4].playerB = match2Winner;
+                    const pA = knockoutPlayers[match1Winner];
+                    const pB = knockoutPlayers[match2Winner];
+                    document.getElementById('ko-pA-5').textContent = pA.name;
+                    document.getElementById('ko-pA-5').className = `knockout-player ${pA.group === 'A' ? 'from-a' : 'from-b'}`;
+                    document.getElementById('ko-pB-5').textContent = pB.name;
+                    document.getElementById('ko-pB-5').className = `knockout-player ${pB.group === 'A' ? 'from-a' : 'from-b'}`;
+                }
+                
+                if (match3Winner !== null && match4Winner !== null) {
+                    knockoutMatches[5].playerA = match3Winner;
+                    knockoutMatches[5].playerB = match4Winner;
+                    const pA = knockoutPlayers[match3Winner];
+                    const pB = knockoutPlayers[match4Winner];
+                    document.getElementById('ko-pA-6').textContent = pA.name;
+                    document.getElementById('ko-pA-6').className = `knockout-player ${pA.group === 'A' ? 'from-a' : 'from-b'}`;
+                    document.getElementById('ko-pB-6').textContent = pB.name;
+                    document.getElementById('ko-pB-6').className = `knockout-player ${pB.group === 'A' ? 'from-a' : 'from-b'}`;
+                }
+                
+                const match5Winner = knockoutMatches[4].winner;
+                const match6Winner = knockoutMatches[5].winner;
+                
+                if (match5Winner !== null && match6Winner !== null) {
+                    knockoutMatches[6].playerA = match5Winner;
+                    knockoutMatches[6].playerB = match6Winner;
+                    const pA = knockoutPlayers[match5Winner];
+                    const pB = knockoutPlayers[match6Winner];
+                    document.getElementById('ko-pA-7').textContent = pA.name;
+                    document.getElementById('ko-pA-7').className = `knockout-player ${pA.group === 'A' ? 'from-a' : 'from-b'}`;
+                    document.getElementById('ko-pB-7').textContent = pB.name;
+                    document.getElementById('ko-pB-7').className = `knockout-player ${pB.group === 'A' ? 'from-a' : 'from-b'}`;
+                }
+            }
+
+            function updateKnockoutWinners() {
+                knockoutMatches.forEach(match => {
+                    if (match.winner !== null) {
+                        const pAEl = document.getElementById(`ko-pA-${match.id}`);
+                        const pBEl = document.getElementById(`ko-pB-${match.id}`);
+                        if (pAEl && pBEl) {
+                            if (match.winner === match.playerA) {
+                                pAEl.classList.add('winner');
+                                pBEl.classList.remove('winner');
+                            } else {
+                                pBEl.classList.add('winner');
+                                pAEl.classList.remove('winner');
+                            }
+                        }
+                    }
+                });
             }
 
             function fillDemoData() {
@@ -2541,6 +3529,36 @@
                         }
                     }
                     updateRoundRobinUI();
+                } else if (currentMode === 'group12') {
+                    const allAMatches = groupARounds.flatMap(r => r.matches);
+                    const allBMatches = groupBRounds.flatMap(r => r.matches);
+                    const hasData = allAMatches.some(m => m.scoreA !== null) || allBMatches.some(m => m.scoreA !== null);
+                    if (hasData && !confirm('当前已有比分数据，填入演示数据将覆盖它们。确定继续吗？')) return;
+
+                    groupARounds.forEach(round => {
+                        round.matches.forEach(match => {
+                            const inputA = document.getElementById('gA-scoreA-' + match.globalIdx);
+                            const inputB = document.getElementById('gA-scoreB-' + match.globalIdx);
+                            if (inputA && inputB) {
+                                inputA.value = Math.floor(Math.random() * 3) + 1;
+                                inputB.value = Math.floor(Math.random() * 3) + 1;
+                            }
+                        });
+                    });
+                    groupBRounds.forEach(round => {
+                        round.matches.forEach(match => {
+                            const inputA = document.getElementById('gB-scoreA-' + match.globalIdx);
+                            const inputB = document.getElementById('gB-scoreB-' + match.globalIdx);
+                            if (inputA && inputB) {
+                                inputA.value = Math.floor(Math.random() * 3) + 1;
+                                inputB.value = Math.floor(Math.random() * 3) + 1;
+                            }
+                        });
+                    });
+                    updateGroupUI();
+                    setTimeout(() => {
+                        enterKnockout();
+                    }, 500);
                 } else {
                     const hasData = Object.values(doubleElimMatches).some(m => m.status === 'finished');
                     if (hasData && !confirm('当前已有比分数据，填入演示数据将覆盖它们。确定继续吗？')) return;
@@ -2566,6 +3584,10 @@
             window.backToSelection = backToSelection;
             window.resetAllScores = resetAllScores;
             window.fillDemoData = fillDemoData;
+            window.handleGroupInputChange = handleGroupInputChange;
+            window.updateKnockoutScore = updateKnockoutScore;
+            window.enterKnockout = enterKnockout;
+            window.refreshKnockout = refreshKnockout;
 
             initSelection();
         })();
